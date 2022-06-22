@@ -22,7 +22,6 @@ SELECT
     metrics.conversions AS conversions,
     metrics.impressions AS impressions,
     metrics.clicks AS clicks,
-    metrics.ctr AS ctr
 FROM campaign
 WHERE campaign.advertising_channel_type = "PERFORMANCE_MAX"
     AND segments.date >= "{start_date}"
