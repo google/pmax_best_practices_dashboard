@@ -1,4 +1,5 @@
 SELECT
+    customer.id AS account_id,
     asset.name AS asset_name,
     asset.id AS asset_id,
     asset.image_asset.file_size AS image_file_size,
