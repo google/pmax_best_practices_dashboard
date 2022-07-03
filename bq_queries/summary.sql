@@ -11,7 +11,7 @@ SELECT
     CM.impressions,
     CM.clicks,
     CM.conversions,
-    PC.conversion_action
-FROM segy-adsapi.pmax_draft2.campaign AS CM
-INNER JOIN segy-adsapi.pmax_draft2.primary_conversion_action as PC
-  ON CM.account_id = PC.account_id;
+    CS.conversion_action
+FROM {bq_project}.{bq_dataset}.campaign AS CM
+INNER JOIN {bq_project}.{bq_dataset}.conversion_split as CS
+  ON CM.account_id = CS.account_id;
