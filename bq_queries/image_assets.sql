@@ -83,6 +83,7 @@ SELECT
   AGA.account_id,
   AGA.campaign_id,
   AGA.asset_group_id,
+  AGA.ad_strength,
   CIA.count_images,
   CL.count_logos,
   CRA.count_rectangular,
@@ -103,4 +104,4 @@ LEFT JOIN count_square_logos AS CSL
           ON CSL.campaign_id = AGA.campaign_id
 LEFT JOIN count_rectangular_logos AS CRL
           ON CRL.campaign_id = AGA.campaign_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10

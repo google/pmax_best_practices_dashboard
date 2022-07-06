@@ -11,7 +11,7 @@ SELECT
     CM.impressions,
     CM.clicks,
     CM.conversions,
-    CS.conversion_action
+    CS.conversion_action_id
 FROM {bq_project}.{bq_dataset}.campaign AS CM
 INNER JOIN {bq_project}.{bq_dataset}.conversion_split as CS
   ON CM.account_id = CS.account_id;
