@@ -3,15 +3,17 @@ AS (
   WITH convActionFreq AS (
      SELECT
         account_id,
-        conversion_action,
-        ROW_NUMBER() OVER (PARTITION BY account_id ORDER BY SUM(conversions) DESC ) as row_num
+        campaign_id,
+        conversion_name,
+        ROW_NUMBER() OVER (PARTITION BY account_id, campaign_id ORDER BY SUM(conversions) DESC ) as row_num
      FROM {bq_project}.{bq_dataset}.conversion_split
-     WHERE campaign_type == "PERFORMANCE_MAX"
-     GROUP BY account_id, conversion_action
+     WHERE campaign_type = "PERFORMANCE_MAX"
+     GROUP BY account_id, campaign_id, conversion_name
   )
   SELECT
       account_id,
-      conversion_action
+      campaign_id, 
+      conversion_name
   FROM convActionFreq
   WHERE row_num = 1
 );
