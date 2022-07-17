@@ -1,6 +1,7 @@
 SELECT
     segments.date AS date,
     customer.id AS account_id,
+    customer.descriptive_name AS account_name,
     campaign.id AS campaign_id,
     campaign.name AS campaign_name,
     campaign.status AS campaign_status,
