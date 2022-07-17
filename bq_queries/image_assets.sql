@@ -20,12 +20,14 @@ count_logos AS (
   FROM
     {bq_project}.{bq_dataset}.asset_group_asset
   WHERE asset_sub_type = 'LOGO'
-  GROUP BY account_id, campaign_id
+  GROUP BY 1, 2
 ),
 map_assets_account_campaign AS (
   SELECT
     AGA.account_id,
+    AGA.account_name,
     AGA.campaign_id,
+    AGA.campaign_name,
     AGA.asset_id,
     AGA.asset_group_id,
     A.image_width,
@@ -45,7 +47,7 @@ count_rectangular_assets AS (
     map_assets_account_campaign
   WHERE image_width = 600
     AND image_height = 300
-  GROUP BY account_id, campaign_id, asset_group_id
+  GROUP BY 1, 2, 3
 ),
 count_square_300 AS (
   SELECT
@@ -55,7 +57,7 @@ count_square_300 AS (
   FROM map_assets_account_campaign
     WHERE image_width = image_height
       AND image_width = 300
-  GROUP BY account_id, campaign_id
+  GROUP BY 1, 2
 ),
 count_square_logos AS (
   SELECT
@@ -81,7 +83,9 @@ count_rectangular_logos AS (
 )
 SELECT 
   AGA.account_id,
+  AGA.account_name,
   AGA.campaign_id,
+  AGA.campaign_name,
   AGA.asset_group_id,
   AGA.ad_strength,
   CIA.count_images,
@@ -104,4 +108,4 @@ LEFT JOIN count_square_logos AS CSL
           ON CSL.campaign_id = AGA.campaign_id
 LEFT JOIN count_rectangular_logos AS CRL
           ON CRL.campaign_id = AGA.campaign_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12

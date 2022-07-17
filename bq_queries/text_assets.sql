@@ -63,7 +63,9 @@ count_short_descriptions AS (
 )
 SELECT
   AGA.account_id,
+  AGA.account_name,
   AGA.campaign_id,
+  AGA.campaign_name,
   AGA.asset_group_id,
   AGA.ad_strength,
   CH.count_headlines,
@@ -87,4 +89,4 @@ LEFT JOIN count_short_descriptions AS CSD
 LEFT JOIN count_long_headlines AS CLH
         ON CLH.campaign_id = AGA.campaign_id
         AND CLH.asset_group_id = AGA.asset_group_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
