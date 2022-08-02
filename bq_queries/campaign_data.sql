@@ -16,7 +16,8 @@ AS (
   search_campaigns_avg_cpa AS (
     SELECT 
       account_id,
-      AVG(target_cpa) + AVG(max_conv_target_cpa) AS average_search_tcpa
+      AVG(target_cpa) + AVG(max_conv_target_cpa) AS average_search_tcpa,
+      AVG(target_roas) + AVG(max_conv_value_target_roas) AS average_search_troas
     FROM
       {bq_project}.{bq_dataset}.tcpa_search
     GROUP BY 1
@@ -25,7 +26,8 @@ AS (
     SELECT
       S.account_id,
       F.conversion_name AS most_used_conversion_value,
-      CPA.average_search_tcpa AS average_search_tcpa
+      CPA.average_search_tcpa AS average_search_tcpa,
+      CPA.average_search_troas AS average_search_troas
     FROM {bq_project}.{bq_dataset}.tcpa_search S
     JOIN search_campaigns_most_freq F
         ON S.account_id = F.account_id
@@ -43,6 +45,7 @@ AS (
   SELECT
     C.date,
     C.account_id,
+    C.account_name,
     C.campaign_id,
     C.campaign_name,
     C.campaign_status,
@@ -56,16 +59,21 @@ AS (
     C.target_cpa,
     C.target_roas,
     C.max_conv_target_cpa,
+    C.max_conv_value_target_roas,
     C.currency,
     C.cost,
     C.impressions,
     C.conversions,
     C.clicks,
     --coalesce(BC.budget_constrained,"No") AS budget_constrained,
-    if(C.budget_amount/1000000 > 3*c.target_cpa,"Yes","No") AS daily_budget_3tcpa,
-    if(C.budget_amount/1000000 > 3*c.target_roas,"Yes","No") AS daily_budget_3troas,
-    if(PCA.conversion_name = SCD.most_used_conversion_value,"Yes","No") AS is_same_conversion,
-    if(C.target_cpa = SCD.average_search_tcpa,"Yes","No") AS is_same_tcpa
+    IF(C.budget_amount/1000000 > 3*c.target_cpa,"Yes","No") AS daily_budget_3tcpa,
+    IF(C.budget_amount/1000000 > 3*c.target_roas,"Yes","No") AS daily_budget_3troas,
+    IF(PCA.conversion_name = SCD.most_used_conversion_value,"Yes","No") AS is_same_conversion,
+    CASE WHEN C.target_cpa IS NOT NULL
+      THEN IF(C.target_cpa = SCD.average_search_tcpa,"Yes","No") 
+      ELSE
+      IF (C.target_roas = SCD.average_search_troas, "Yes", "No")
+    END AS is_same_target
   FROM
     {bq_project}.{bq_dataset}.campaign C
   --LEFT JOIN budget_constrained BC

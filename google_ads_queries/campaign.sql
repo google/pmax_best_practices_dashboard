@@ -17,6 +17,7 @@ SELECT
     campaign.target_cpa.target_cpa_micros AS target_cpa,
     campaign.target_roas.target_roas AS target_roas,
     campaign.maximize_conversions.target_cpa AS max_conv_target_cpa,
+    campaign.maximize_conversion_value.target_roas AS max_conv_value_target_roas,
     campaign.selective_optimization.conversion_actions AS selective_optimization_conversion_actions,
     bidding_strategy.currency_code AS currency,
     metrics.cost_micros AS cost,
