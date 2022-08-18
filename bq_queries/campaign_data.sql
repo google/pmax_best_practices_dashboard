@@ -3,21 +3,22 @@ AS (
   WITH search_campaigns_freq AS (
     SELECT 
       account_id,
-      approx_top_count(conversion_name, 1) AS most_freq
+      APPROX_TOP_COUNT(conversion_name, 1)[SAFE_OFFSET(0)].value AS conversion_name
     FROM {bq_project}.{bq_dataset}.tcpa_search	
     GROUP BY 1
   ),
-  search_campaigns_most_freq AS (
+  /*search_campaigns_most_freq AS (
     SELECT
       account_id,
       (SELECT value FROM SCF.most_freq) AS conversion_name
     FROM search_campaigns_freq AS SCF
-  ),
+    GROUP BY 1
+  ),*/
   search_campaigns_avg_cpa AS (
     SELECT 
       account_id,
-      AVG(target_cpa) + AVG(max_conv_target_cpa) AS average_search_tcpa,
-      AVG(target_roas) + AVG(max_conv_value_target_roas) AS average_search_troas
+      AVG(0.5*(target_cpa + max_conv_target_cpa)) AS average_search_tcpa,
+      AVG(0.5*(target_roas + max_conv_value_target_roas)) AS average_search_troas
     FROM
       {bq_project}.{bq_dataset}.tcpa_search
     GROUP BY 1
@@ -29,19 +30,19 @@ AS (
       CPA.average_search_tcpa AS average_search_tcpa,
       CPA.average_search_troas AS average_search_troas
     FROM {bq_project}.{bq_dataset}.tcpa_search S
-    JOIN search_campaigns_most_freq F
+    JOIN search_campaigns_freq F
         ON S.account_id = F.account_id
         AND S.conversion_name = F.conversion_name
     JOIN search_campaigns_avg_cpa AS CPA
         ON S.account_id = CPA.account_id
-  ) --,
+   ) --,
   -- budget_constrained as (
   --   SELECT 
   --     account_id,
   --     campaign_id,
   --     "Yes", as budget_constrained
   --   FROM recommendations
-  -- )
+  --  )
   SELECT
     C.date,
     C.account_id,
@@ -61,19 +62,26 @@ AS (
     C.max_conv_target_cpa,
     C.max_conv_value_target_roas,
     C.currency,
-    C.cost,
+    C.cost/1e6 AS cost,
     C.impressions,
     C.conversions,
     C.clicks,
+    C.conversions_value,
     --coalesce(BC.budget_constrained,"No") AS budget_constrained,
-    IF(C.budget_amount/1000000 > 3*c.target_cpa,"Yes","No") AS daily_budget_3tcpa,
-    IF(C.budget_amount/1000000 > 3*c.target_roas,"Yes","No") AS daily_budget_3troas,
+    CASE WHEN C.target_cpa IS NOT NULL AND C.target_cpa > 0
+          THEN IF(C.budget_amount/1e6 > 3*c.target_cpa,"Yes","No") 
+          ELSE IF(C.budget_amount/1e6 > 3*c.target_roas,"Yes","No")
+    END AS daily_budget_3target,
     IF(PCA.conversion_name = SCD.most_used_conversion_value,"Yes","No") AS is_same_conversion,
-    CASE WHEN C.target_cpa IS NOT NULL
+    CASE WHEN C.target_cpa IS NOT NULL AND C.target_cpa > 0
       THEN IF(C.target_cpa = SCD.average_search_tcpa,"Yes","No") 
       ELSE
       IF (C.target_roas = SCD.average_search_troas, "Yes", "No")
-    END AS is_same_target
+    END AS is_same_target,
+    CASE WHEN C.budget_amount/1e6 > 140
+          THEN "Yes"
+          ELSE "No"
+    END AS is_daily_budget_140usd
   FROM
     {bq_project}.{bq_dataset}.campaign C
   --LEFT JOIN budget_constrained BC

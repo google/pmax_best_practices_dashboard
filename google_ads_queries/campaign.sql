@@ -23,7 +23,8 @@ SELECT
     metrics.cost_micros AS cost,
     metrics.conversions AS conversions,
     metrics.impressions AS impressions,
-    metrics.clicks AS clicks
+    metrics.clicks AS clicks,
+    metrics.conversions_value AS conversions_value
 FROM campaign
 WHERE campaign.advertising_channel_type = "PERFORMANCE_MAX"
     AND segments.date >= "{start_date}"
