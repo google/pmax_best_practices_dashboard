@@ -59,6 +59,7 @@ AS (
     C.budget_period,
     C.target_cpa,
     C.target_roas,
+    C.gmc_id,
     C.max_conv_target_cpa,
     C.max_conv_value_target_roas,
     C.currency,
