@@ -62,31 +62,31 @@ count_short_descriptions AS (
   GROUP BY 1, 2, 3
 )
 SELECT
-  AGA.account_id,
-  AGA.account_name,
-  AGA.campaign_id,
-  AGA.campaign_name,
-  AGA.asset_group_id,
-  AGA.ad_strength,
+  AGS.account_id,
+  AGS.account_name,
+  AGS.campaign_id,
+  AGS.campaign_name,
+  AGS.asset_group_id,
+  AGS.ad_strength,
   CH.count_headlines,
   CSH.count_short_headlines,
   CD.count_descriptions,
   CSD.count_short_descriptions,
   CLH.count_long_headlines
-FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
+FROM `{bq_project}.{bq_dataset}.assetgroupsummary` AS AGS
 LEFT JOIN count_headlines AS CH
-  ON CH.campaign_id = AGA.campaign_id
-  AND CH.asset_group_id = AGA.asset_group_id
+  ON CH.campaign_id = AGS.campaign_id
+  AND CH.asset_group_id = AGS.asset_group_id
 LEFT JOIN count_short_headlines AS CSH
-  ON CSH.campaign_id = AGA.campaign_id
-  AND CSH.asset_group_id = AGA.asset_group_id
+  ON CSH.campaign_id = AGS.campaign_id
+  AND CSH.asset_group_id = AGS.asset_group_id
 LEFT JOIN count_descriptions AS CD
-  ON CD.campaign_id = AGA.campaign_id
-  AND CD.asset_group_id = AGA.asset_group_id
+  ON CD.campaign_id = AGS.campaign_id
+  AND CD.asset_group_id = AGS.asset_group_id
 LEFT JOIN count_short_descriptions AS CSD
-  ON CSD.campaign_id = AGA.campaign_id
-  AND CSD.asset_group_id = AGA.asset_group_id
+  ON CSD.campaign_id = AGS.campaign_id
+  AND CSD.asset_group_id = AGS.asset_group_id
 LEFT JOIN count_long_headlines AS CLH
-  ON CLH.campaign_id = AGA.campaign_id
-  AND CLH.asset_group_id = AGA.asset_group_id
+  ON CLH.campaign_id = AGS.campaign_id
+  AND CLH.asset_group_id = AGS.asset_group_id
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
