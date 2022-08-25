@@ -67,7 +67,8 @@ SELECT
   AGS.campaign_id,
   AGS.campaign_name,
   AGS.asset_group_id,
-  AGS.ad_strength,
+  #Temporarily Disabled Field
+  #AGS.ad_strength,
   CH.count_headlines,
   CSH.count_short_headlines,
   CD.count_descriptions,

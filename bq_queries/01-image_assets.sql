@@ -90,7 +90,8 @@ SELECT
   AGS.campaign_id,
   AGS.campaign_name,
   AGS.asset_group_id,
-  AGS.ad_strength,
+  #Temporarily Disabled Field
+  #AGS.ad_strength,
   CIA.count_images,
   CL.count_logos,
   CRA.count_rectangular,
