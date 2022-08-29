@@ -117,4 +117,4 @@ LEFT JOIN count_square_logos AS CSL
 LEFT JOIN count_rectangular_logos AS CRL
   ON CRL.campaign_id = AGS.campaign_id
   AND CRL.asset_group_id = AGS.asset_group_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
