@@ -61,6 +61,7 @@ AS (
     C.target_roas,
     C.gmc_id,
     C.optiscore,
+    C.audience_signals,
     C.max_conv_target_cpa,
     C.max_conv_value_target_roas,
     C.currency,

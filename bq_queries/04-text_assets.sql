@@ -67,6 +67,7 @@ SELECT
   AGS.campaign_id,
   AGS.campaign_name,
   AGS.asset_group_id,
+  AGS.asset_group_name,
   #Temporarily Disabled Field
   #AGS.ad_strength,
   CH.count_headlines,
@@ -90,4 +91,4 @@ LEFT JOIN count_short_descriptions AS CSD
 LEFT JOIN count_long_headlines AS CLH
   ON CLH.campaign_id = AGS.campaign_id
   AND CLH.asset_group_id = AGS.asset_group_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11

@@ -17,6 +17,7 @@ CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}.video_assets` AS (
     AGS.campaign_id,
     AGS.campaign_name,
     AGS.asset_group_id,
+    AGS.asset_group_name,
     #Temporarily Disabled Field, waiting v11.1 API support
     #AGS.ad_strength,
     COALESCE(VD.video_uploaded,"No") AS is_video_uploaded

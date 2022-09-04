@@ -21,6 +21,7 @@ SELECT
     campaign.selective_optimization.conversion_actions AS selective_optimization_conversion_actions,
     campaign.shopping_setting.merchant_id as gmc_id,
     campaign.optimization_score as optiscore,
+    campaign.audience_setting.use_audience_grouped as audience_signals,
     bidding_strategy.currency_code AS currency,
     metrics.cost_micros AS cost,
     metrics.conversions AS conversions,
