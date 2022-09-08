@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}.campaign_data`
+CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.campaign_data`
 AS (
   WITH search_campaigns_freq AS (
     SELECT 
@@ -61,7 +61,7 @@ AS (
     C.target_roas,
     C.gmc_id,
     C.optiscore,
-    C.audience_signals,
+    IF(C.audience_signals=true,"Yes","No") AS audience_signals,
     C.max_conv_target_cpa,
     C.max_conv_value_target_roas,
     C.currency,
@@ -93,7 +93,7 @@ AS (
   --  AND C.campaign_id = BC.campaign_id
   LEFT JOIN search_campaign_data AS SCD
     ON C.account_id = SCD.account_id
-  LEFT JOIN `{bq_project}.{bq_dataset}.primary_conversion_action_pmax` AS PCA
+  LEFT JOIN `{bq_project}.{bq_dataset}_bq.primary_conversion_action_pmax` AS PCA
     ON PCA.account_id = C.account_id
     AND PCA.campaign_id = C.campaign_id
 )

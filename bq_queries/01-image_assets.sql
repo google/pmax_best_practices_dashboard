@@ -1,26 +1,29 @@
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}.image_assets`
+CREATE SCHEMA IF NOT EXISTS `{bq_project}.{bq_dataset}_bq`;
+CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.image_assets`
 AS
 WITH count_image_assets AS (
   SELECT
     account_id,
     campaign_id,
     asset_group_id,
+    asset_group_name,
     COUNT(*) AS count_images
   FROM
     `{bq_project}.{bq_dataset}.assetgroupasset`
   WHERE asset_type = 'IMAGE'
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_logos AS (
   SELECT 
     account_id,
     campaign_id,
     asset_group_id,
+    asset_group_name,
     COUNT(*) AS count_logos
   FROM
     `{bq_project}.{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type = 'LOGO'
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 map_assets_account_campaign AS (
   SELECT
@@ -30,6 +33,7 @@ map_assets_account_campaign AS (
     AGA.campaign_name,
     AGA.asset_id,
     AGA.asset_group_id,
+    AGA.asset_group_name,
     A.image_width,
     A.image_height
   FROM `{bq_project}.{bq_dataset}.assetgroupasset` as AGA
@@ -42,47 +46,51 @@ count_rectangular_assets AS (
     account_id,
     campaign_id,
     asset_group_id,
+    asset_group_name,
     COUNT(*) AS count_rectangular
   FROM
     map_assets_account_campaign
   WHERE image_width = 600
     AND image_height = 300
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_square_300 AS (
   SELECT
     account_id,
     campaign_id,
     asset_group_id,
+    asset_group_name,
     COUNT(*) AS count_square
   FROM map_assets_account_campaign
   WHERE image_width = image_height
     AND image_width = 300
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_square_logos AS (
   SELECT
     AGA.account_id,
     AGA.campaign_id,
     AGA.asset_group_id,
+    AGA.asset_group_name,
     COUNT(*) AS count_square_logos
   FROM `{bq_project}.{bq_dataset}.asset` AS A
   INNER JOIN `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
     ON AGA.asset_id = A.asset_id
   WHERE A.image_width = A.image_height
     AND A.image_width = 128
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_rectangular_logos AS (
   SELECT
     account_id,
     campaign_id,
     asset_group_id,
+    asset_group_name,
     COUNT(*) AS count_rectangular_logos
   FROM map_assets_account_campaign
   WHERE image_width = 1200
     AND image_height = 628
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 )
 SELECT 
   AGS.account_id,

@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}.video_assets` AS (
+CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.video_assets` AS (
   WITH video_data AS(
     SELECT
       account_id,
@@ -6,10 +6,11 @@ CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}.video_assets` AS (
       campaign_id,
       campaign_name,
       asset_group_id,
+      asset_group_name,
       "Yes" AS video_uploaded
     FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
     WHERE AGA.asset_type = 'YOUTUBE_VIDEO'
-    GROUP BY 1,2,3,4,5,6
+    GROUP BY 1,2,3,4,5,6,7
   )
   SELECT
     AGS.account_id,

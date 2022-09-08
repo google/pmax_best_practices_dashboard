@@ -1,65 +1,70 @@
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}.text_assets`
+CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.text_assets`
 AS
 WITH count_headlines AS (
   SELECT
     account_id,
     campaign_id,
     asset_group_id,
+    asset_group_name,
     COUNT(*) AS count_headlines
   FROM `{bq_project}.{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type IN ('HEADLINE', 'LONG_HEADLINE')
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_short_headlines AS (
   SELECT
     AGA.account_id,
     AGA.campaign_id,
     AGA.asset_group_id,
+    AGA.asset_group_name,
     COUNT(*) AS count_short_headlines
   FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
   INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'HEADLINE'
       --AND LENGTH(A.text_asset_text) = 15
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_long_headlines AS (
   SELECT
     AGA.account_id,
     AGA.campaign_id,
     AGA.asset_group_id,
+    AGA.asset_group_name,
     COUNT(*) AS count_long_headlines
   FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
   INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'LONG_HEADLINE'
       --AND LENGTH(A.text_asset_text) = 90
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_descriptions AS (
   SELECT
     AGA.account_id,
     AGA.campaign_id,
     AGA.asset_group_id,
+    AGA.asset_group_name,
     COUNT(*) AS count_descriptions
   FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
   INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'DESCRIPTION'
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 ),
 count_short_descriptions AS (
   SELECT
     AGA.account_id,
     AGA.campaign_id,
     AGA.asset_group_id,
+    AGA.asset_group_name,
     COUNT(*) AS count_short_descriptions
   FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
   INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'DESCRIPTION'
     AND LENGTH(A.text_asset_text) <= 60
-  GROUP BY 1, 2, 3
+  GROUP BY 1, 2, 3, 4
 )
 SELECT
   AGS.account_id,
