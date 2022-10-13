@@ -7,6 +7,7 @@ WITH video_data AS (
     campaign_name,
     asset_group_id,
     asset_group_name,
+    ad_strength,
     is_video_uploaded,
     CAST(1 as FLOAT64) AS video_score
   FROM `{bq_project}.{bq_dataset}_bq.video_assets`
@@ -50,6 +51,7 @@ SELECT
     V.campaign_name,
     V.asset_group_id,
     V.asset_group_name,
+    V.ad_strength,
     is_video_uploaded,
     IF(count_descriptions >= 5,"Yes","No") AS count_descriptions,
     IF(count_headlines >= 5,"Yes","No") AS count_headlines,

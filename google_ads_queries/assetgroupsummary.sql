@@ -5,9 +5,8 @@ SELECT
   campaign.id AS campaign_id,
   campaign.name AS campaign_name,
   customer.id AS account_id,
-  customer.descriptive_name AS account_name
-  //Temporarily Disabled Field, Waiting for support v11.1 of API Node.JS library
-  //asset_group.ad_strength as ad_strength
+  customer.descriptive_name AS account_name,
+  asset_group.ad_strength as ad_strength
 FROM asset_group
 WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
 AND asset_group.status = 'ENABLED'
