@@ -61,7 +61,7 @@ AS (
     C.target_roas,
     C.gmc_id,
     C.optiscore,
-    IF(C.audience_signals=true,"Yes","No") AS audience_signals,
+    IF(C.audience_signals=true,"Yes","X") AS audience_signals,
     C.max_conv_target_cpa,
     C.max_conv_value_target_roas,
     C.currency,
@@ -73,18 +73,18 @@ AS (
     --coalesce(BC.budget_constrained,"No") AS budget_constrained,
     CASE
       WHEN C.target_cpa IS NOT NULL AND C.target_cpa > 0
-        THEN IF(C.budget_amount/1e6 > 3*c.target_cpa,"Yes","No") 
-      ELSE IF(C.budget_amount/1e6 > 3*c.target_roas,"Yes","No")
+        THEN IF(C.budget_amount/1e6 > 3*c.target_cpa,"Yes","X") 
+      ELSE IF(C.budget_amount/1e6 > 3*c.target_roas,"Yes","X")
     END AS daily_budget_3target,
-    IF(PCA.conversion_name = SCD.most_used_conversion_value,"Yes","No") AS is_same_conversion,
+    IF(PCA.conversion_name = SCD.most_used_conversion_value,"Yes","X") AS is_same_conversion,
     CASE
       WHEN C.target_cpa IS NOT NULL AND C.target_cpa > 0
-        THEN IF(C.target_cpa = SCD.average_search_tcpa,"Yes","No") 
-      ELSE IF (C.target_roas = SCD.average_search_troas, "Yes", "No")
+        THEN IF(C.target_cpa = SCD.average_search_tcpa,"Yes","X") 
+      ELSE IF (C.target_roas = SCD.average_search_troas, "Yes", "X")
     END AS is_same_target,
     CASE
       WHEN C.budget_amount/1e6 > 140 THEN "Yes"
-      ELSE "No"
+      ELSE "X"
     END AS is_daily_budget_140usd
   FROM
     `{bq_project}.{bq_dataset}.campaign_settings` C
