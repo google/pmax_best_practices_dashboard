@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.text_assets`
+CREATE OR REPLACE VIEW `{bq_dataset}_bq.text_assets`
 AS
 WITH count_headlines AS (
   SELECT
@@ -7,7 +7,7 @@ WITH count_headlines AS (
     asset_group_id,
     asset_group_name,
     COUNT(*) AS count_headlines
-  FROM `{bq_project}.{bq_dataset}.assetgroupasset`
+  FROM `{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type IN ('HEADLINE', 'LONG_HEADLINE')
   GROUP BY 1, 2, 3, 4
 ),
@@ -18,8 +18,8 @@ count_short_headlines AS (
     AGA.asset_group_id,
     AGA.asset_group_name,
     COUNT(*) AS count_short_headlines
-  FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
-  INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
+  FROM `{bq_dataset}.assetgroupasset` AS AGA
+  INNER JOIN `{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'HEADLINE'
       --AND LENGTH(A.text_asset_text) = 15
@@ -32,8 +32,8 @@ count_long_headlines AS (
     AGA.asset_group_id,
     AGA.asset_group_name,
     COUNT(*) AS count_long_headlines
-  FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
-  INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
+  FROM `{bq_dataset}.assetgroupasset` AS AGA
+  INNER JOIN `{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'LONG_HEADLINE'
       --AND LENGTH(A.text_asset_text) = 90
@@ -46,8 +46,8 @@ count_descriptions AS (
     AGA.asset_group_id,
     AGA.asset_group_name,
     COUNT(*) AS count_descriptions
-  FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
-  INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
+  FROM `{bq_dataset}.assetgroupasset` AS AGA
+  INNER JOIN `{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'DESCRIPTION'
   GROUP BY 1, 2, 3, 4
@@ -59,8 +59,8 @@ count_short_descriptions AS (
     AGA.asset_group_id,
     AGA.asset_group_name,
     COUNT(*) AS count_short_descriptions
-  FROM `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
-  INNER JOIN `{bq_project}.{bq_dataset}.asset` AS A
+  FROM `{bq_dataset}.assetgroupasset` AS AGA
+  INNER JOIN `{bq_dataset}.asset` AS A
     ON A.asset_id = AGA.asset_id
   WHERE AGA.asset_sub_type = 'DESCRIPTION'
     AND LENGTH(A.text_asset_text) <= 60
@@ -80,7 +80,7 @@ SELECT
   CD.count_descriptions,
   CSD.count_short_descriptions,
   CLH.count_long_headlines
-FROM `{bq_project}.{bq_dataset}.assetgroupsummary` AS AGS
+FROM `{bq_dataset}.assetgroupsummary` AS AGS
 LEFT JOIN count_headlines AS CH
   ON CH.campaign_id = AGS.campaign_id
   AND CH.asset_group_id = AGS.asset_group_id

@@ -1,5 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS `{bq_project}.{bq_dataset}_bq`;
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.image_assets`
+CREATE SCHEMA IF NOT EXISTS `{bq_dataset}_bq`;
+CREATE OR REPLACE VIEW `{bq_dataset}_bq.image_assets`
 AS
 WITH count_image_assets AS (
   SELECT
@@ -9,7 +9,7 @@ WITH count_image_assets AS (
     asset_group_name,
     COUNT(*) AS count_images
   FROM
-    `{bq_project}.{bq_dataset}.assetgroupasset`
+    `{bq_dataset}.assetgroupasset`
   WHERE asset_type = 'IMAGE'
   GROUP BY 1, 2, 3, 4
 ),
@@ -21,7 +21,7 @@ count_logos AS (
     asset_group_name,
     COUNT(*) AS count_logos
   FROM
-    `{bq_project}.{bq_dataset}.assetgroupasset`
+    `{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type = 'LOGO'
   GROUP BY 1, 2, 3, 4
 ),
@@ -36,8 +36,8 @@ map_assets_account_campaign AS (
     AGA.asset_group_name,
     A.image_width,
     A.image_height
-  FROM `{bq_project}.{bq_dataset}.assetgroupasset` as AGA
-  LEFT JOIN `{bq_project}.{bq_dataset}.asset` as A
+  FROM `{bq_dataset}.assetgroupasset` as AGA
+  LEFT JOIN `{bq_dataset}.asset` as A
     ON AGA.account_id = A.account_id
     AND AGA.asset_id = A.asset_id
 ),
@@ -73,8 +73,8 @@ count_square_logos AS (
     AGA.asset_group_id,
     AGA.asset_group_name,
     COUNT(*) AS count_square_logos
-  FROM `{bq_project}.{bq_dataset}.asset` AS A
-  INNER JOIN `{bq_project}.{bq_dataset}.assetgroupasset` AS AGA
+  FROM `{bq_dataset}.asset` AS A
+  INNER JOIN `{bq_dataset}.assetgroupasset` AS AGA
     ON AGA.asset_id = A.asset_id
   WHERE A.image_width = A.image_height
     AND A.image_width = 128
@@ -107,7 +107,7 @@ SELECT
   CSN.count_square,
   CSL.count_square_logos,
   CRL.count_rectangular_logos
-FROM `{bq_project}.{bq_dataset}.assetgroupsummary` AS AGS
+FROM `{bq_dataset}.assetgroupsummary` AS AGS
 LEFT JOIN count_image_assets AS CIA
   ON CIA.campaign_id = AGS.campaign_id
   AND CIA.asset_group_id = AGS.asset_group_id

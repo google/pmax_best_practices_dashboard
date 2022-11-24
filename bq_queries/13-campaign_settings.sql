@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.campaign_settings` AS
+CREATE OR REPLACE VIEW `{bq_dataset}_bq.campaign_settings` AS
 WITH assetgroupbestpractices AS (
     SELECT
         CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date,
@@ -7,7 +7,7 @@ WITH assetgroupbestpractices AS (
         AVG(video_score) AS video_score,
         AVG(text_score) AS text_score,
         AVG(image_score) AS image_score,
-    FROM `{bq_project}.{bq_dataset}_bq.assetgroupbpscore_*`
+    FROM `{bq_dataset}_bq.assetgroupbpscore_*`
     GROUP BY 1,2,3
 ),
 campaignbestpractices AS (
@@ -16,7 +16,7 @@ campaignbestpractices AS (
         account_id,
         campaign_id,
         campaign_bp_score
-    FROM `{bq_project}.{bq_dataset}_bq.campaignbpscore_*`
+    FROM `{bq_dataset}_bq.campaignbpscore_*`
     GROUP BY 1,2,3,4
 )
 SELECT
@@ -50,6 +50,6 @@ SELECT
     text_score,
     image_score,
     campaign_bp_score
-FROM `{bq_project}.{bq_dataset}.campaign_settings` C
+FROM `{bq_dataset}.campaign_settings` C
 LEFT JOIN assetgroupbestpractices ABP USING (date,account_id,campaign_id)
 LEFT JOIN campaignbestpractices CBP USING (date,account_id,campaign_id)

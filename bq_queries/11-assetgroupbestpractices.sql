@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW `{bq_project}.{bq_dataset}_bq.assetgroupbestpractices` AS
+CREATE OR REPLACE VIEW `{bq_dataset}_bq.assetgroupbestpractices` AS
 WITH video_data AS (
   SELECT
     account_id,
@@ -10,7 +10,7 @@ WITH video_data AS (
     ad_strength,
     is_video_uploaded,
     CAST(1 as FLOAT64) AS video_score
-  FROM `{bq_project}.{bq_dataset}_bq.video_assets`
+  FROM `{bq_dataset}_bq.video_assets`
 ),
 text_data AS (
   SELECT
@@ -25,7 +25,7 @@ text_data AS (
     count_short_descriptions,
     count_short_headlines,
     (IF(count_descriptions >= 5,1,0)+IF(count_headlines >= 5,1,0)+IF(count_long_headlines >= 1,1,0)+IF(count_short_descriptions >= 1,1,0)+IF(count_short_headlines >= 1,1,0))/5 AS text_score
-  FROM `{bq_project}.{bq_dataset}_bq.text_assets`
+  FROM `{bq_dataset}_bq.text_assets`
 ),
 image_data AS (
   SELECT
@@ -41,7 +41,7 @@ image_data AS (
     count_square,
     count_square_logos,
     (IF(count_images >= 15,1,0)+IF(count_logos >= 5,1,0)+IF(count_rectangular >= 1,1,0)+IF(count_rectangular_logos >= 1,1,0)+IF(count_square >= 1,1,0)+IF(count_square_logos >= 1,1,0))/6 AS image_score
-  FROM `{bq_project}.{bq_dataset}_bq.image_assets`
+  FROM `{bq_dataset}_bq.image_assets`
 )
 SELECT
     V.account_id,
