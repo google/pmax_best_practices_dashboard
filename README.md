@@ -38,7 +38,7 @@ The easiest way is to install inside Cloud Shell (assuming that further, if not 
 * upload your google-ads.yaml into that directory (it should contain developer_token, client_id, client_secret, refresh_token, login_customer_id);
 if you're not sure where to take that data please follow our guide - [How to authenticate ads api](https://github.com/google/ads-api-report-fetcher/blob/main/docs/how-to-authenticate-ads-api.md)
 * Execute the command: `rm -rf \~/.npm/`
-* Execute the command: `npm init gaarf-wf` - this will install and run the create-gaarf-wf tool which generates everything for you
+* Execute the command: `npm init gaarf-wf -- --answers=answers.json` - this will install and run the create-gaarf-wf tool which generates everything for you
 * Follow the instructions
 
 ### Usage
