@@ -1,0 +1,21 @@
+{
+  "use_current_project": true,
+  "name": "pmax",
+  "path_to_ads_queries": "google_ads_queries",
+  "path_to_bq_queries": "bq_queries",
+  "path_to_googleads_config": "google-ads.yaml",
+  "custom_ids_query_path": "get-accounts.sql",
+  "cf_memory": "2048MB",
+  "deploy_scripts": true,
+  "deploy_wf": true,
+  "output_dataset": "pmax_ads",
+  "ads_macro": {
+    "start_date": "2022-01-01",
+    "end_date": ":YYYYMMDD"
+  },
+  "bq_macro": {
+    "bq_dataset": "pmax_ads"
+  },
+  "schedule_wf": true,
+  "schedule_time": "06:00"
+}

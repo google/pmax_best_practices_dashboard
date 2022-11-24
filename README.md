@@ -29,13 +29,16 @@ Access to the repository configured. In order to clone this repository you need 
 
 ### Installation
 
+The easiest way is to install inside Cloud Shell (assuming that further, if not the case make sure you've install Cloud SDK and set a current project via `gcloud config`).
+
 * Enter GCP Cloud Shell command-line
 * Clone solution repository by entering the command:
-git clone https://professional-services.googlesource.com/solutions/pmax_dashboard --depth=1
-* Go to the directory of the solution : cd pmax_dashboard
-* TODO: put google-ads.yaml into the same directory
-* Launch the command: rm -rf \~/.npm/
-* Launch the command : npm init gaarf-wf
+`git clone https://professional-services.googlesource.com/solutions/pmax_dashboard --depth=1`
+* Go to the directory of the solution : `cd pmax_dashboard`
+* upload your google-ads.yaml into that directory (it should contain developer_token, client_id, client_secret, refresh_token, login_customer_id);
+if you're not sure where to take that data please follow our guide - [How to authenticate ads api](https://github.com/google/ads-api-report-fetcher/blob/main/docs/how-to-authenticate-ads-api.md)
+* Execute the command: `rm -rf \~/.npm/`
+* Execute the command: `npm init gaarf-wf` - this will install and run the create-gaarf-wf tool which generates everything for you
 * Follow the instructions
 
 ### Usage
