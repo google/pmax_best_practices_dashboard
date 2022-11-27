@@ -20,7 +20,7 @@ CREATE OR REPLACE VIEW `{bq_dataset}_bq.video_assets` AS (
     AGS.asset_group_id,
     AGS.asset_group_name,
     AGS.ad_strength,
-    COALESCE(VD.video_uploaded,"No") AS is_video_uploaded
+    COALESCE(VD.video_uploaded,"X") AS is_video_uploaded
   FROM `{bq_dataset}.assetgroupsummary` AS AGS
   LEFT JOIN video_data AS VD USING (account_id,campaign_id,asset_group_id)
 )

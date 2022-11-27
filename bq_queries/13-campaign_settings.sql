@@ -1,5 +1,26 @@
 CREATE OR REPLACE VIEW `{bq_dataset}_bq.campaign_settings` AS
-WITH assetgroupbestpractices AS (
+WITH targets AS (
+    SELECT
+      C.date,
+      C.account_id,
+      C.campaign_id,
+      CASE 
+        WHEN C.campaign_mcv_troas IS NOT NULL THEN C.campaign_mcv_troas
+        WHEN C.campaign_troas IS NOT NULL THEN C.campaign_troas
+        WHEN C.bidding_strategy_mcv_troas IS NOT NULL THEN C.bidding_strategy_mcv_troas
+        WHEN C.bidding_strategy_troas IS NOT NULL THEN C.bidding_strategy_troas
+      END AS troas,
+    
+    CASE
+      WHEN C.campaign_mc_tcpa IS NOT NULL THEN C.campaign_mc_tcpa
+      WHEN C.campaign_tcpa IS NOT NULL THEN C.campaign_tcpa
+      WHEN C.bidding_strategy_mc_tcpa IS NOT NULL THEN C.bidding_strategy_mc_tcpa
+      WHEN C.bidding_strategy_tcpa IS NOT NULL THEN C.bidding_strategy_tcpa
+    END AS tcpa
+
+    FROM `{bq_dataset}.campaign_settings` C
+  ),
+assetgroupbestpractices AS (
     SELECT
         CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date,
         account_id,
@@ -33,13 +54,11 @@ SELECT
     C.budget_type,
     C.is_shared_budget,
     C.budget_period,
-    C.target_cpa,
-    C.target_roas,
+    T.troas,
+    T.tcpa,
     C.gmc_id,
     C.optiscore,
     C.audience_signals,
-    C.max_conv_target_cpa,
-    C.max_conv_value_target_roas,
     C.currency,
     C.cost/1e6 AS cost,
     C.impressions,
@@ -51,5 +70,6 @@ SELECT
     image_score,
     campaign_bp_score
 FROM `{bq_dataset}.campaign_settings` C
+LEFT JOIN targets T USING(account_id, campaign_id)
 LEFT JOIN assetgroupbestpractices ABP USING (date,account_id,campaign_id)
 LEFT JOIN campaignbestpractices CBP USING (date,account_id,campaign_id)

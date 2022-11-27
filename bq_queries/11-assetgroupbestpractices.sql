@@ -65,7 +65,8 @@ SELECT
     IF(count_square_logos >= 1,"Yes","X") AS count_square_logos,
     video_score,
     text_score,
-    image_score
+    image_score,
+    (IF(count_descriptions<5,5-count_descriptions,0) + IF(count_headlines<5,5-count_headlines,0) + IF(count_long_headlines>=1,1,0) + IF(count_short_descriptions>=1,1,0) + IF(count_short_headlines>=1,1,0) + IF(count_images<15,15-count_images,0) + IF(count_logos<5,5-count_logos,0) + IF(count_rectangular>=1,1,0) + IF(count_square>=1,1,0) + IF(count_square_logos>=1,1,0)) AS num_missing_assets
 FROM video_data V
 JOIN text_data T USING (account_id,campaign_id,asset_group_id)
 JOIN image_data I USING (account_id,campaign_id,asset_group_id)
