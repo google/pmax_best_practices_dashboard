@@ -20,20 +20,20 @@ WITH targets AS (
 
     FROM `{bq_dataset}.campaign_settings` C
   ),
-assetgroupbestpractices AS (
+  assetgroupbestpractices AS (
     SELECT
-        CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date,
+        CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
         account_id,
         campaign_id,
         AVG(video_score) AS video_score,
         AVG(text_score) AS text_score,
         AVG(image_score) AS image_score,
-    FROM `{bq_dataset}_bq.assetgroupbpscore_*`
+    FROM `{bq_dataset}.assetgroupbpscore_*`
     GROUP BY 1,2,3
 ),
 campaignbestpractices AS (
     SELECT
-        CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date,
+        CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
         account_id,
         campaign_id,
         campaign_bp_score
@@ -65,11 +65,17 @@ SELECT
     C.conversions,
     C.clicks,
     C.conversions_value,
-    video_score,
-    text_score,
-    image_score,
-    campaign_bp_score
+    ABP.video_score,
+    ABP.text_score,
+    ABP.image_score,
+    CBP.campaign_bp_score
 FROM `{bq_dataset}.campaign_settings` C
 LEFT JOIN targets T USING(account_id, campaign_id)
-LEFT JOIN assetgroupbestpractices ABP USING (date,account_id,campaign_id)
-LEFT JOIN campaignbestpractices CBP USING (date,account_id,campaign_id)
+LEFT JOIN assetgroupbestpractices ABP 
+  ON C.date = ABP.date_
+  AND C.account_id = ABP.account_id
+  AND C.campaign_id = ABP.campaign_id
+LEFT JOIN campaignbestpractices CBP 
+  ON C.date = CBP.date_
+  AND C.account_id = CBP.account_id
+  AND C.campaign_id = CBP.campaign_id
