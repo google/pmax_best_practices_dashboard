@@ -28,7 +28,7 @@ WITH targets AS (
         AVG(video_score) AS video_score,
         AVG(text_score) AS text_score,
         AVG(image_score) AS image_score,
-    FROM `{bq_dataset}.assetgroupbpscore_*`
+    FROM `{bq_dataset}_bq.assetgroupbpscore_*`
     GROUP BY 1,2,3
 ),
 campaignbestpractices AS (
