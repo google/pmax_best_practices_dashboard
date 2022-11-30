@@ -17,5 +17,16 @@
     "bq_dataset": "pmax_ads"
   },
   "schedule_wf": true,
-  "schedule_time": "06:00"
+  "schedule_time": "06:00",
+  "//clone_dashboard": true,
+  "dashboard_id": "8ce3b94b-2dfe-48a0-b022-a22287bf00ff",
+  "dashboard_name": "pMax Best Practices Dashboard",
+  "dashboard_dataset": "pmax_ads_bq",
+  "dashboard_datasources": {
+    "campaign_data": "campaign_data",
+    "summaryassets": "summaryassets",
+    "campaign_settings": "campaign_settings",
+    "assetgroupbestpractices": "assetgroupbestpractices",
+    "assetssnapshots": "assetssnapshots"
+  }
 }
