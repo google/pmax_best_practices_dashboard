@@ -45,28 +45,29 @@ image_data AS (
 )
 SELECT
     CURRENT_DATE() AS date,
-    V.account_id,
-    V.account_name,
-    V.campaign_id,
-    V.campaign_name,
-    V.asset_group_id,
-    V.asset_group_name,
-    V.ad_strength,
-    is_video_uploaded,
-    IF(count_descriptions >= 5,"Yes","X") AS count_descriptions,
-    IF(count_headlines >= 5,"Yes","X") AS count_headlines,
-    IF(count_long_headlines >= 1,"Yes","X") AS count_long_headlines,
-    IF(count_short_descriptions >= 1,"Yes","X") AS count_short_descriptions,
-    IF(count_short_headlines >= 1,"Yes","X") AS count_short_headlines,
-    IF(count_images >= 15,"Yes","X") AS count_images,
-    IF(count_logos >= 5,"Yes","X") AS count_logos,
-    IF(count_rectangular >= 1,"Yes","X") AS count_rectangular,
-    IF(count_rectangular_logos >= 1,"Yes","X") AS count_rectangular_logos,
-    IF(count_square >= 1,"Yes","X") AS count_square,
-    IF(count_square_logos >= 1,"Yes","X") AS count_square_logos,
-    video_score,
-    text_score,
-    image_score
-FROM video_data V
+    AGS.account_id,
+    AGS.account_name,
+    AGS.campaign_id,
+    AGS.campaign_name,
+    AGS.asset_group_id,
+    AGS.asset_group_name,
+    AGS.ad_strength,
+    V.is_video_uploaded,
+    IF(T.count_descriptions >= 5,"Yes","X") AS count_descriptions,
+    IF(T.count_headlines >= 5,"Yes","X") AS count_headlines,
+    IF(T.count_long_headlines >= 1,"Yes","X") AS count_long_headlines,
+    IF(T.count_short_descriptions >= 1,"Yes","X") AS count_short_descriptions,
+    IF(T.count_short_headlines >= 1,"Yes","X") AS count_short_headlines,
+    IF(I.count_images >= 15,"Yes","X") AS count_images,
+    IF(I.count_logos >= 5,"Yes","X") AS count_logos,
+    IF(I.count_rectangular >= 1,"Yes","X") AS count_rectangular,
+    IF(I.count_rectangular_logos >= 1,"Yes","X") AS count_rectangular_logos,
+    IF(I.count_square >= 1,"Yes","X") AS count_square,
+    IF(I.count_square_logos >= 1,"Yes","X") AS count_square_logos,
+    V.video_score,
+    T.text_score,
+    I.image_score
+FROM `{bq_dataset}.assetgroupsummary` AGS
+JOIN video_data V USING (account_id,campaign_id,asset_group_id)
 JOIN text_data T USING (account_id,campaign_id,asset_group_id)
 JOIN image_data I USING (account_id,campaign_id,asset_group_id)

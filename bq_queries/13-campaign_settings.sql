@@ -10,14 +10,12 @@ WITH targets AS (
         WHEN C.bidding_strategy_mcv_troas IS NOT NULL THEN C.bidding_strategy_mcv_troas
         WHEN C.bidding_strategy_troas IS NOT NULL THEN C.bidding_strategy_troas
       END AS troas,
-    
     CASE
       WHEN C.campaign_mc_tcpa IS NOT NULL THEN C.campaign_mc_tcpa
       WHEN C.campaign_tcpa IS NOT NULL THEN C.campaign_tcpa
       WHEN C.bidding_strategy_mc_tcpa IS NOT NULL THEN C.bidding_strategy_mc_tcpa
       WHEN C.bidding_strategy_tcpa IS NOT NULL THEN C.bidding_strategy_tcpa
     END AS tcpa
-
     FROM `{bq_dataset}.campaign_settings` C
   ),
   assetgroupbestpractices AS (
