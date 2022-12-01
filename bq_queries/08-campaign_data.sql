@@ -11,7 +11,6 @@ AS (
         WHEN C.bidding_strategy_mcv_troas IS NOT NULL THEN C.bidding_strategy_mcv_troas
         WHEN C.bidding_strategy_troas IS NOT NULL THEN C.bidding_strategy_troas
       END AS troas,
-    
     CASE
       WHEN C.campaign_mc_tcpa IS NOT NULL THEN C.campaign_mc_tcpa
       WHEN C.campaign_tcpa IS NOT NULL THEN C.campaign_tcpa
@@ -20,6 +19,25 @@ AS (
     END AS tcpa
 
     FROM `{bq_dataset}.campaign_settings` C
+  ),
+  search_targets AS (
+    SELECT
+      TS.date,
+      TS.account_id,
+      TS.campaign_id,
+      CASE 
+        WHEN TS.campaign_mcv_troas IS NOT NULL THEN TS.campaign_mcv_troas
+        WHEN TS.campaign_troas IS NOT NULL THEN TS.campaign_troas
+        WHEN TS.bidding_strategy_mcv_troas IS NOT NULL THEN TS.bidding_strategy_mcv_troas
+        WHEN TS.bidding_strategy_troas IS NOT NULL THEN TS.bidding_strategy_troas
+      END AS troas,
+    CASE
+      WHEN TS.campaign_mc_tcpa IS NOT NULL THEN TS.campaign_mc_tcpa
+      WHEN TS.campaign_tcpa IS NOT NULL THEN TS.campaign_tcpa
+      WHEN TS.bidding_strategy_mc_tcpa IS NOT NULL THEN TS.bidding_strategy_mc_tcpa
+      WHEN TS.bidding_strategy_tcpa IS NOT NULL THEN TS.bidding_strategy_tcpa
+    END AS tcpa
+    FROM `{bq_dataset}.tcpa_search` TS
   ),
   
   search_campaigns_freq AS (
@@ -39,10 +57,10 @@ AS (
   search_campaigns_avg_cpa AS (
     SELECT 
       account_id,
-      AVG(0.5*(target_cpa + max_conv_target_cpa)) AS average_search_tcpa,
-      AVG(0.5*(target_roas + max_conv_value_target_roas)) AS average_search_troas
+      AVG(tcpa) AS average_search_tcpa,
+      AVG(troas) AS average_search_troas
     FROM
-      `{bq_dataset}.tcpa_search`
+      `{bq_dataset}.search_targets`
     GROUP BY 1
   ),
   search_campaign_data AS (
