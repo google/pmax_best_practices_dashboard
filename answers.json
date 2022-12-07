@@ -27,6 +27,6 @@
     "summaryassets": "summaryassets",
     "campaign_settings": "campaign_settings",
     "assetgroupbestpractices": "assetgroupbestpractices",
-    "assetssnapshots": "assetssnapshots"
+    "assetssnapshots": "assetssnapshots_*"
   }
 }
