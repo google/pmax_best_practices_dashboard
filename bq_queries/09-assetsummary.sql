@@ -8,7 +8,7 @@ SELECT
   AGA.campaign_id,
   AGA.asset_id,
   AGA.asset_sub_type,
-  AGA.ad_strength,
+  AGA.asset_performance,
   A.text_asset_text,
   COALESCE(A.image_url,CONCAT('https://www.youtube.com/watch?v=',A.video_id)) AS image_video,
   COALESCE(A.image_url,CONCAT('https://i.ytimg.com/vi/', CONCAT(A.video_id, '/hqdefault.jpg'))) AS image_video_url

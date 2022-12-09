@@ -9,7 +9,7 @@ SELECT
   customer.descriptive_name AS account_name,
   asset.type AS asset_type,
   asset_group_asset.field_type AS asset_sub_type,
-  asset_group_asset.performance_label as ad_strength
+  asset_group_asset.performance_label as asset_performance
 FROM asset_group_asset
 WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
 AND asset_group_asset.status = 'ENABLED'

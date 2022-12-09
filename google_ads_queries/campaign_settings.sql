@@ -5,8 +5,6 @@ SELECT
     campaign.id AS campaign_id,
     campaign.name AS campaign_name,
     campaign.status AS campaign_status,
-    campaign.start_date AS start_date,
-    campaign.end_date AS end_date,
     campaign.url_expansion_opt_out AS url_expansion_opt_out,
     campaign.bidding_strategy_type AS bidding_strategy,
     campaign_budget.amount_micros AS budget_amount,
@@ -26,11 +24,8 @@ SELECT
     campaign.shopping_setting.merchant_id as gmc_id,
     campaign.optimization_score as optiscore,
     campaign.audience_setting.use_audience_grouped as audience_signals,
-    bidding_strategy.currency_code AS currency,
     metrics.cost_micros AS cost,
     metrics.conversions AS conversions,
-    metrics.impressions AS impressions,
-    metrics.clicks AS clicks,
     metrics.conversions_value AS conversions_value
 FROM campaign
 WHERE campaign.advertising_channel_type = "PERFORMANCE_MAX"

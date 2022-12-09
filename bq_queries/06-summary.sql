@@ -7,8 +7,6 @@ SELECT
   CM.campaign_status,
   CM.bidding_strategy,
   ROUND(CM.cost/1000000) AS cost,
-  CM.impressions,
-  CM.clicks,
   CM.conversions,
   CS.conversion_action_id
 FROM `{bq_dataset}.campaign_settings` AS CM

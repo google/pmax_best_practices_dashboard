@@ -51,7 +51,7 @@ count_rectangular_assets AS (
   FROM
     map_assets_account_campaign
   WHERE image_width = 600
-    AND image_height = 300
+    AND image_height IN (300,314)
   GROUP BY 1, 2, 3, 4
 ),
 count_square_300 AS (
@@ -63,7 +63,7 @@ count_square_300 AS (
     COUNT(*) AS count_square
   FROM map_assets_account_campaign
   WHERE image_width = image_height
-    AND image_width = 300
+    AND image_width IN (300,314)
   GROUP BY 1, 2, 3, 4
 ),
 count_square_logos AS (
@@ -99,8 +99,6 @@ SELECT
   AGS.campaign_name,
   AGS.asset_group_id,
   AGS.asset_group_name,
-  #Temporarily Disabled Field
-  #AGS.ad_strength,
   CIA.count_images,
   CL.count_logos,
   CRA.count_rectangular,
