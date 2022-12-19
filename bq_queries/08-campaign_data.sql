@@ -60,7 +60,7 @@ AS (
       AVG(tcpa) AS average_search_tcpa,
       AVG(troas) AS average_search_troas
     FROM
-      `{bq_dataset}.search_targets`
+      search_targets
     GROUP BY 1
   ),
   search_campaign_data AS (
@@ -102,11 +102,8 @@ AS (
     C.gmc_id,
     C.optiscore,
     IF(C.audience_signals=true,"Yes","X") AS audience_signals,
-    C.currency,
     C.cost/1e6 AS cost,
-    C.impressions,
     C.conversions,
-    C.clicks,
     C.conversions_value,
     --coalesce(BC.budget_constrained,"No") AS budget_constrained,
     CASE
