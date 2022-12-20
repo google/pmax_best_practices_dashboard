@@ -16,3 +16,5 @@ FROM
 	campaign
 WHERE
 	campaign.advertising_channel_type = 'SEARCH'
+  AND segments.date >= "{start_date}"
+  AND segments.date <= "{end_date}"
