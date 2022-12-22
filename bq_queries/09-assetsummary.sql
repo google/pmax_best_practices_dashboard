@@ -14,6 +14,5 @@ SELECT
   COALESCE(A.image_url,CONCAT('https://i.ytimg.com/vi/', CONCAT(A.video_id, '/hqdefault.jpg'))) AS image_video_url
 FROM `{bq_dataset}.assetgroupasset` AGA
 JOIN `{bq_dataset}.asset` A USING(account_id,asset_id)
-WHERE ad_strength NOT IN ('PENDING','UNKNOWN')
+WHERE AGA.asset_performance NOT IN ('PENDING','UNKNOWN')
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
-ORDER BY ad_strength DESC
