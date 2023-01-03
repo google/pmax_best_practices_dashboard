@@ -1,5 +1,4 @@
 SELECT
-	segments.date AS date,
   customer.id as account_id,
 	campaign.id as campaign_id,
 	segments.conversion_action~0 AS conversion_action_id,
@@ -16,5 +15,3 @@ FROM
 	campaign
 WHERE
 	campaign.advertising_channel_type = 'SEARCH'
-  AND segments.date >= "{start_date}"
-  AND segments.date <= "{end_date}"
