@@ -1,0 +1,21 @@
+gaarf:
+  output: bq
+  bq:
+    project: YOUR-BQ-PROJECT
+    dataset: pmax_ads_test
+    location: YOUR-REGION
+  # Do not change API version manually
+  api_version: 12
+  account: 'MCC-ID'
+  params:
+    macro:
+      start_date: ":YYYYMMDD-91"
+      end_date: ":YYYYMMDD-1"
+gaarf-bq:
+  project: YOUR-BQ-PROJECT
+  dataset_location: YOUR-REGION
+  params:
+    macro:
+      bq_dataset: pmax_ads_test
+      output_dataset: pmax_ads_output
+      target_dataset: pmax_ads_target
