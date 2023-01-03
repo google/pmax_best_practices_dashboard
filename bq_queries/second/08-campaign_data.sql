@@ -18,7 +18,7 @@ AS (
       WHEN C.bidding_strategy_tcpa IS NOT NULL THEN C.bidding_strategy_tcpa
     END AS tcpa
 
-    FROM `{bq_dataset}.campaign_settings` C
+    FROM `{bq_project}.{bq_dataset}.campaign_settings` C
   ),
   search_targets AS (
     SELECT
@@ -37,14 +37,14 @@ AS (
       WHEN TS.bidding_strategy_mc_tcpa IS NOT NULL THEN TS.bidding_strategy_mc_tcpa
       WHEN TS.bidding_strategy_tcpa IS NOT NULL THEN TS.bidding_strategy_tcpa
     END AS tcpa
-    FROM `{bq_dataset}.tcpa_search` TS
+    FROM `{bq_project}.{bq_dataset}.tcpa_search` TS
   ),
   
   search_campaigns_freq AS (
     SELECT 
       account_id,
       APPROX_TOP_COUNT(conversion_name, 1)[SAFE_OFFSET(0)].value AS conversion_name
-    FROM `{bq_dataset}.tcpa_search`
+    FROM `{bq_project}.{bq_dataset}.tcpa_search`
     GROUP BY 1
   ),
   /*search_campaigns_most_freq AS (
@@ -69,7 +69,7 @@ AS (
       F.conversion_name AS most_used_conversion_value,
       CPA.average_search_tcpa AS average_search_tcpa,
       CPA.average_search_troas AS average_search_troas
-    FROM `{bq_dataset}.tcpa_search` S
+    FROM `{bq_project}.{bq_dataset}.tcpa_search` S
     JOIN search_campaigns_freq F
         ON S.account_id = F.account_id
         AND S.conversion_name = F.conversion_name
@@ -122,7 +122,7 @@ AS (
       ELSE "X"
     END AS is_daily_budget_140usd
   FROM
-    `{bq_dataset}.campaign_settings` C
+    `{bq_project}.{bq_dataset}.campaign_settings` C
   LEFT JOIN targets AS T
     ON C.account_id = T.account_id
     AND C.campaign_id = T.campaign_id
@@ -131,7 +131,7 @@ AS (
   --  AND C.campaign_id = BC.campaign_id
   LEFT JOIN search_campaign_data AS SCD
     ON C.account_id = SCD.account_id
-  LEFT JOIN `{bq_dataset}_bq.primary_conversion_action_pmax` AS PCA
+  LEFT JOIN `{bq_project}.{bq_dataset}_bq.primary_conversion_action_pmax` AS PCA
     ON PCA.account_id = C.account_id
     AND PCA.campaign_id = C.campaign_id
 )
