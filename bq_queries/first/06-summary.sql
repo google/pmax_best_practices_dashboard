@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CREATE OR REPLACE VIEW `{bq_dataset}_bq.summary` AS
+CREATE OR REPLACE TABLE `{bq_dataset}_bq.summary` AS
 SELECT
   PARSE_DATE("%Y-%m-%d", CM.date) AS day,
   CM.account_id AS account_id,

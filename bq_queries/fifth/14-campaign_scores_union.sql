@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CREATE OR REPLACE VIEW `{bq_dataset}_bq.campaign_scores_union` AS
+CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaign_scores_union` AS
 WITH 
 score_types AS
 (
