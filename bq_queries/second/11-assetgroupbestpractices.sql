@@ -85,3 +85,4 @@ FROM `{bq_dataset}.assetgroupsummary` AGS
 JOIN video_data V USING (account_id, campaign_id, asset_group_id)
 JOIN text_data T USING (account_id,campaign_id, asset_group_id)
 JOIN image_data I USING (account_id,campaign_id, asset_group_id)
+WHERE campaign_id IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`)
