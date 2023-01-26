@@ -37,9 +37,9 @@ WITH targets AS (
         CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
         account_id,
         campaign_id,
-        AVG(video_score) AS video_score,
-        AVG(text_score) AS text_score,
-        AVG(image_score) AS image_score,
+        video_score,
+        text_score,
+        image_score,
     FROM `{bq_dataset}_bq.assetgroupbpscore_*`
     GROUP BY 1,2,3
 ),

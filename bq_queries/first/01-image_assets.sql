@@ -87,9 +87,7 @@ count_square_logos AS (
     AGA.asset_group_id,
     AGA.asset_group_name,
     COUNT(*) AS count_square_logos
-  FROM `{bq_dataset}.asset` AS A
-  INNER JOIN `{bq_dataset}.assetgroupasset` AS AGA
-    ON AGA.asset_id = A.asset_id
+  FROM map_assets_account_campaign
   WHERE A.image_width = A.image_height
     AND A.image_width = 128
   GROUP BY 1, 2, 3, 4
