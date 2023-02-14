@@ -17,37 +17,28 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.image_assets`
 AS
 WITH count_image_assets AS (
   SELECT
-    account_id,
     campaign_id,
     asset_group_id,
-    asset_group_name,
     COUNT(*) AS count_images
   FROM
     `{bq_dataset}.assetgroupasset`
   WHERE asset_type = 'IMAGE'
-  GROUP BY 1, 2, 3, 4
+  GROUP BY 1, 2
 ),
 count_logos AS (
   SELECT 
-    account_id,
     campaign_id,
     asset_group_id,
-    asset_group_name,
     COUNT(*) AS count_logos
   FROM
     `{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type = 'LOGO'
-  GROUP BY 1, 2, 3, 4
+  GROUP BY 1, 2
 ),
 map_assets_account_campaign AS (
   SELECT
-    AGA.account_id,
-    AGA.account_name,
     AGA.campaign_id,
-    AGA.campaign_name,
-    AGA.asset_id,
     AGA.asset_group_id,
-    AGA.asset_group_name,
     A.image_width,
     A.image_height
   FROM `{bq_dataset}.assetgroupasset` as AGA
@@ -57,52 +48,44 @@ map_assets_account_campaign AS (
 ),
 count_rectangular_assets AS (
   SELECT
-    account_id,
     campaign_id,
     asset_group_id,
-    asset_group_name,
     COUNT(*) AS count_rectangular
   FROM
     map_assets_account_campaign
   WHERE image_width = 600
     AND image_height IN (300,314)
-  GROUP BY 1, 2, 3, 4
+  GROUP BY 1, 2
 ),
 count_square_300 AS (
   SELECT
-    account_id,
     campaign_id,
     asset_group_id,
-    asset_group_name,
     COUNT(*) AS count_square
   FROM map_assets_account_campaign
   WHERE image_width = image_height
     AND image_width IN (300,314)
-  GROUP BY 1, 2, 3, 4
+  GROUP BY 1, 2
 ),
 count_square_logos AS (
   SELECT
-    AGA.account_id,
     AGA.campaign_id,
-    AGA.asset_group_id,
-    AGA.asset_group_name,
+    AGA.asset_group_idת
     COUNT(*) AS count_square_logos
   FROM map_assets_account_campaign
   WHERE A.image_width = A.image_height
     AND A.image_width = 128
-  GROUP BY 1, 2, 3, 4
+  GROUP BY 1, 2
 ),
 count_rectangular_logos AS (
   SELECT
-    account_id,
     campaign_id,
-    asset_group_id,
-    asset_group_name,
+    asset_group_idת
     COUNT(*) AS count_rectangular_logos
   FROM map_assets_account_campaign
   WHERE image_width = 1200
     AND image_height = 628
-  GROUP BY 1, 2, 3, 4
+  GROUP BY 1, 2
 )
 SELECT 
   AGS.account_id,
