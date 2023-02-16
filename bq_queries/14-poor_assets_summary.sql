@@ -12,20 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CREATE OR REPLACE TABLE `{bq_dataset}_bq.primary_conversion_action_search`
-AS (
-  WITH convActionFreq AS (
-     SELECT
-        account_id,
-        conversion_action_id,
-        ROW_NUMBER() OVER (PARTITION BY account_id ORDER BY SUM(conversions) DESC ) AS row_num
-     FROM `{bq_dataset}.conversion_split`
-     WHERE campaign_type = "SEARCH"
-     GROUP BY account_id, conversion_action_id
-  )
-  SELECT
-    account_id,
-    conversion_action_id
-  FROM convActionFreq
-  WHERE row_num = 1
-)
+CREATE OR REPLACE TABLE `{bq_dataset}_bq.poor_assets_summary` AS
+    SELECT
+        COUNT(distinct ABP.campaign_id) AS num_campaigns,
+        COUNT(distinct ABP.asset_group_id) AS num_asset_groups
+    FROM `{bq_dataset}_bq.assetgroupbestpractices` ABP
+    WHERE ad_strength = 'POOR'
