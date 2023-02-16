@@ -17,15 +17,15 @@ AS (
   WITH convActionFreq AS (
      SELECT
         account_id,
-        conversion_action_id,
+        conversion_action_name,
         ROW_NUMBER() OVER (PARTITION BY account_id ORDER BY SUM(conversions) DESC ) AS row_num
      FROM `{bq_dataset}.conversion_split`
      WHERE campaign_type = "SEARCH"
-     GROUP BY account_id, conversion_action_id
+     GROUP BY 1,2
   )
   SELECT
     account_id,
-    conversion_action_id
+    conversion_action_name
   FROM convActionFreq
   WHERE row_num = 1
 )
