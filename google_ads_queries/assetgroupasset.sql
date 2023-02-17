@@ -15,7 +15,6 @@
 SELECT
   asset_group.id AS asset_group_id,
   asset_group.name AS asset_group_name,
-  asset_group.status AS asset_group_status,
   campaign.id AS campaign_id,
   campaign.name AS campaign_name,
   asset.id AS asset_id,

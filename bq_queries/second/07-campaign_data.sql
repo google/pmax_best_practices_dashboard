@@ -36,7 +36,6 @@ AS (
   ),
   search_targets AS (
     SELECT
-      TS.date,
       TS.account_id,
       TS.campaign_id,
       CASE 
@@ -80,7 +79,7 @@ AS (
   search_campaign_data AS (
     SELECT
       S.account_id,
-      F.conversion_name AS most_used_conversion_value,
+      F.conversion_name AS most_used_conversion_action,
       CPA.average_search_tcpa AS average_search_tcpa,
       CPA.average_search_troas AS average_search_troas
     FROM `{bq_dataset}.tcpa_search` S
@@ -125,11 +124,11 @@ AS (
         THEN IF(C.budget_amount/1e6 > 3*T.tcpa,"Yes","X") 
       ELSE IF(C.budget_amount/1e6 > 3*T.troas,"Yes","X")
     END AS daily_budget_3target,
-    IF(PCA.conversion_name = SCD.most_used_conversion_value,"Yes","X") AS is_same_conversion,
+    IF(PCA.conversion_name = SCD.most_used_conversion_action,"Yes","X") AS is_same_conversion,
     CASE
       WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
         THEN IF(T.tcpa = SCD.average_search_tcpa,"Yes","X") 
-      ELSE IF (troas = SCD.average_search_troas, "Yes", "X")
+      ELSE IF (T.troas = SCD.average_search_troas, "Yes", "X")
     END AS is_same_target,
     CASE
       WHEN C.budget_amount/1e6 > 140 THEN "Yes"

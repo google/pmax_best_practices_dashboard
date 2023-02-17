@@ -16,11 +16,8 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.assetgroupbpscore_${format(today(),'yyy
 WITH video_data AS (
   SELECT
     account_id,
-    account_name,
     campaign_id,
-    campaign_name,
     asset_group_id,
-    asset_group_name,
     ad_strength,
     is_video_uploaded,
     CAST(1 as FLOAT64) AS video_score
@@ -29,9 +26,7 @@ WITH video_data AS (
 text_data AS (
   SELECT
     account_id,
-    account_name,
     campaign_id,
-    campaign_name,
     asset_group_id,
     count_descriptions,
     count_headlines,
@@ -44,9 +39,7 @@ text_data AS (
 image_data AS (
   SELECT
     account_id,
-    account_name,
     campaign_id,
-    campaign_name,
     asset_group_id,
     count_images,
     count_logos,
