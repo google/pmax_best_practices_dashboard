@@ -41,7 +41,7 @@ WITH targets AS (
         text_score,
         image_score,
     FROM `{bq_dataset}_bq.assetgroupbpscore_*`
-    GROUP BY 1,2,3
+    GROUP BY 1,2,3,4,5,6
 ),
 campaignbestpractices AS (
     SELECT

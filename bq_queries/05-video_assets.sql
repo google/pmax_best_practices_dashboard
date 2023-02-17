@@ -30,7 +30,7 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.video_assets` AS (
     AGS.asset_group_id,
     AGS.asset_group_name,
     AGS.ad_strength,
-    IFNULL(AGV.asset_group_id,"X","Yes") AS is_video_uploaded
+    IF(AGV.asset_group_id IS NULL, "X", "Yes") AS is_video_uploaded
   FROM `{bq_dataset}.assetgroupsummary` AS AGS
   LEFT JOIN asset_group_with_videos AS AGV USING (asset_group_id)
 )
