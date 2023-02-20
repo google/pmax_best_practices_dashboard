@@ -69,18 +69,18 @@ count_square_300 AS (
 ),
 count_square_logos AS (
   SELECT
-    AGA.campaign_id,
-    AGA.asset_group_idת
+    campaign_id,
+    asset_group_id,
     COUNT(*) AS count_square_logos
   FROM map_assets_account_campaign
-  WHERE A.image_width = A.image_height
-    AND A.image_width = 128
+  WHERE image_width = image_height
+    AND image_width = 128
   GROUP BY 1, 2
 ),
 count_rectangular_logos AS (
   SELECT
     campaign_id,
-    asset_group_idת
+    asset_group_id,
     COUNT(*) AS count_rectangular_logos
   FROM map_assets_account_campaign
   WHERE image_width = 1200
