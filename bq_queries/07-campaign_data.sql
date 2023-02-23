@@ -16,43 +16,43 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaign_data`
 AS (
   WITH targets AS (
     SELECT
-      C.date,
-      C.account_id,
-      C.campaign_id,
+      account_id,
+      campaign_id,
       CASE 
-        WHEN C.campaign_mcv_troas IS NOT NULL THEN C.campaign_mcv_troas
-        WHEN C.campaign_troas IS NOT NULL THEN C.campaign_troas
-        WHEN C.bidding_strategy_mcv_troas IS NOT NULL THEN C.bidding_strategy_mcv_troas
-        WHEN C.bidding_strategy_troas IS NOT NULL THEN C.bidding_strategy_troas
+        WHEN campaign_mcv_troas IS NOT NULL THEN campaign_mcv_troas
+        WHEN campaign_troas IS NOT NULL THEN campaign_troas
+        WHEN bidding_strategy_mcv_troas IS NOT NULL THEN bidding_strategy_mcv_troas
+        WHEN bidding_strategy_troas IS NOT NULL THEN bidding_strategy_troas
       END AS troas,
     CASE
-      WHEN C.campaign_mc_tcpa IS NOT NULL THEN C.campaign_mc_tcpa
-      WHEN C.campaign_tcpa IS NOT NULL THEN C.campaign_tcpa
-      WHEN C.bidding_strategy_mc_tcpa IS NOT NULL THEN C.bidding_strategy_mc_tcpa
-      WHEN C.bidding_strategy_tcpa IS NOT NULL THEN C.bidding_strategy_tcpa
+      WHEN campaign_mc_tcpa IS NOT NULL THEN campaign_mc_tcpa
+      WHEN campaign_tcpa IS NOT NULL THEN campaign_tcpa
+      WHEN bidding_strategy_mc_tcpa IS NOT NULL THEN bidding_strategy_mc_tcpa
+      WHEN bidding_strategy_tcpa IS NOT NULL THEN bidding_strategy_tcpa
     END AS tcpa
 
-    FROM `{bq_dataset}.campaign_settings` C
+    FROM `{bq_dataset}.campaign_settings` 
   ),
   search_targets AS (
     SELECT
-      TS.account_id,
-      TS.campaign_id,
+      account_id,
+      campaign_id,
       CASE 
-        WHEN TS.campaign_mcv_troas IS NOT NULL THEN TS.campaign_mcv_troas
-        WHEN TS.campaign_troas IS NOT NULL THEN TS.campaign_troas
-        WHEN TS.bidding_strategy_mcv_troas IS NOT NULL THEN TS.bidding_strategy_mcv_troas
-        WHEN TS.bidding_strategy_troas IS NOT NULL THEN TS.bidding_strategy_troas
+        WHEN campaign_mcv_troas IS NOT NULL THEN campaign_mcv_troas
+        WHEN campaign_troas IS NOT NULL THEN campaign_troas
+        WHEN bidding_strategy_mcv_troas IS NOT NULL THEN bidding_strategy_mcv_troas
+        WHEN bidding_strategy_troas IS NOT NULL THEN bidding_strategy_troas
+        ELSE NULL
       END AS troas,
     CASE
-      WHEN TS.campaign_mc_tcpa IS NOT NULL THEN TS.campaign_mc_tcpa
-      WHEN TS.campaign_tcpa IS NOT NULL THEN TS.campaign_tcpa
-      WHEN TS.bidding_strategy_mc_tcpa IS NOT NULL THEN TS.bidding_strategy_mc_tcpa
-      WHEN TS.bidding_strategy_tcpa IS NOT NULL THEN TS.bidding_strategy_tcpa
+      WHEN campaign_mc_tcpa IS NOT NULL THEN campaign_mc_tcpa
+      WHEN campaign_tcpa IS NOT NULL THEN campaign_tcpa
+      WHEN bidding_strategy_mc_tcpa IS NOT NULL THEN bidding_strategy_mc_tcpa
+      WHEN bidding_strategy_tcpa IS NOT NULL THEN bidding_strategy_tcpa
+      ELSE NULL
     END AS tcpa
-    FROM `{bq_dataset}.tcpa_search` TS
+    FROM `{bq_dataset}.tcpa_search`
   ),
-  
   search_campaigns_freq AS (
     SELECT 
       account_id,
@@ -60,18 +60,11 @@ AS (
     FROM `{bq_dataset}.tcpa_search`
     GROUP BY 1
   ),
-  /*search_campaigns_most_freq AS (
-    SELECT
-      account_id,
-      (SELECT value FROM SCF.most_freq) AS conversion_name
-    FROM search_campaigns_freq AS SCF
-    GROUP BY 1
-  ),*/
   search_campaigns_avg_cpa AS (
     SELECT 
       account_id,
-      AVG(tcpa) AS average_search_tcpa,
-      AVG(troas) AS average_search_troas
+      IF (tcpa IS NULL, NULL, AVG(tcpa)) AS average_search_tcpa,
+      IF (troas IS NULL, NULL, AVG(troas)) AS average_search_troas
     FROM
       search_targets
     GROUP BY 1
@@ -128,7 +121,7 @@ AS (
     CASE
       WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
         THEN IF(T.tcpa = SCD.average_search_tcpa,"Yes","X") 
-      ELSE IF (troas = SCD.average_search_troas, "Yes", "X")
+        ELSE IF(T.troas IS NOT NULL AND T.troas > 0, IF(troas = SCD.average_search_troas, "Yes", "X"),'null')
     END AS is_same_target,
     CASE
       WHEN C.budget_amount/1e6 > 140 THEN "Yes"

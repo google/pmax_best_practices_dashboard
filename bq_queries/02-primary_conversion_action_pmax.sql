@@ -18,16 +18,16 @@ AS (
      SELECT
         account_id,
         campaign_id,
-        conversion_name,
+        conversion_action_id,
         ROW_NUMBER() OVER (PARTITION BY account_id, campaign_id ORDER BY SUM(conversions) DESC ) AS row_num
      FROM `{bq_dataset}.conversion_split`
      WHERE campaign_type = "PERFORMANCE_MAX"
-     GROUP BY account_id, campaign_id, conversion_name
+     GROUP BY account_id, campaign_id, conversion_action_id
   )
   SELECT
     account_id,
     campaign_id, 
-    conversion_name
+    conversion_action_id
   FROM convActionFreq
   WHERE row_num = 1
 )
