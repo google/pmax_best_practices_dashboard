@@ -63,8 +63,8 @@ AS (
   search_campaigns_avg_cpa AS (
     SELECT 
       account_id,
-      IF (tcpa IS NULL, NULL, AVG(tcpa)) AS average_search_tcpa,
-      IF (troas IS NULL, NULL, AVG(troas)) AS average_search_troas
+      AVG(tcpa) AS average_search_tcpa,
+      AVG(troas) AS average_search_troas
     FROM
       search_targets
     GROUP BY 1
