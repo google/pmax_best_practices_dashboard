@@ -10,7 +10,7 @@
   "deploy_wf": true,
   "output_dataset": "pmax_ads",
   "ads_macro": {
-    "start_date": "2022-01-01",
+    "start_date": ":YYYYMMDD-90",
     "end_date": ":YYYYMMDD"
   },
   "bq_macro": {
