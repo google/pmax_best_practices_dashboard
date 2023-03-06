@@ -56,7 +56,7 @@ AS (
   search_campaigns_freq AS (
     SELECT 
       account_id,
-      APPROX_TOP_COUNT(conversion_name, 1)[SAFE_OFFSET(0)].value AS conversion_name
+      APPROX_TOP_COUNT(conversion_action_id, 1)[SAFE_OFFSET(0)].value AS conversion_action_id
     FROM `{bq_dataset}.tcpa_search`
     GROUP BY 1
   ),
@@ -72,13 +72,13 @@ AS (
   search_campaign_data AS (
     SELECT
       S.account_id,
-      F.conversion_name AS most_used_conversion_value,
+      F.conversion_action_id AS most_used_conversion,
       CPA.average_search_tcpa AS average_search_tcpa,
       CPA.average_search_troas AS average_search_troas
     FROM `{bq_dataset}.tcpa_search` S
     JOIN search_campaigns_freq F
         ON S.account_id = F.account_id
-        AND S.conversion_name = F.conversion_name
+        AND S.conversion_action_id = F.conversion_action_id
     JOIN search_campaigns_avg_cpa AS CPA
         ON S.account_id = CPA.account_id
    ) --,
@@ -117,7 +117,7 @@ AS (
         THEN IF(C.budget_amount/1e6 > 3*T.tcpa,"Yes","X") 
       ELSE IF(C.budget_amount/1e6 > 3*T.troas,"Yes","X")
     END AS daily_budget_3target,
-    IF(PCA.conversion_name = SCD.most_used_conversion_value,"Yes","X") AS is_same_conversion,
+    IF(PCA.conversion_action_id = SCD.most_used_conversion,"Yes","X") AS is_same_conversion,
     CASE
       WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
         THEN IF(T.tcpa = SCD.average_search_tcpa,"Yes","X") 
