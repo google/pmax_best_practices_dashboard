@@ -73,6 +73,7 @@ AS (
     SELECT
       S.account_id,
       F.conversion_action_id AS most_used_conversion,
+      S.conversion_name AS primary_conversion_search,
       CPA.average_search_tcpa AS average_search_tcpa,
       CPA.average_search_troas AS average_search_troas
     FROM `{bq_dataset}.tcpa_search` S
@@ -112,21 +113,27 @@ AS (
     C.conversions,
     C.conversions_value,
     --coalesce(BC.budget_constrained,"No") AS budget_constrained,
+    PCA.conversion_name AS pmax_conversion,
+    SCD.primary_conversion_search,
     CASE
       WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
-        THEN IF(C.budget_amount/1e6 > 3*T.tcpa,"Yes","X") 
-      ELSE IF(C.budget_amount/1e6 > 3*T.troas,"Yes","X")
-    END AS daily_budget_3target,
-    IF(PCA.conversion_action_id = SCD.most_used_conversion,"Yes","X") AS is_same_conversion,
+        THEN 'tCPA'
+      WHEN T.troas IS NOT NULL AND T.troas > 0
+        THEN 'tROAS'
+      ELSE 'null'
+    END AS target_type,
     CASE
       WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
-        THEN IF(T.tcpa = SCD.average_search_tcpa,"Yes","X") 
-        ELSE IF(T.troas IS NOT NULL AND T.troas > 0, IF(troas = SCD.average_search_troas, "Yes", "X"),'null')
-    END AS is_same_target,
-    CASE
-      WHEN C.budget_amount/1e6 > 140 THEN "Yes"
-      ELSE "X"
-    END AS is_daily_budget_140usd
+        THEN T.tcpa
+      WHEN T.troas IS NOT NULL AND T.troas > 0
+        THEN T.troas
+      ELSE NULL
+    END AS target_value,
+    --CASE
+    --  WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
+    --    THEN IF(T.tcpa = SCD.average_search_tcpa,"Yes","X") 
+    --    ELSE IF(T.troas IS NOT NULL AND T.troas > 0, IF(troas = SCD.average_search_troas, "Yes", "X"),'null')
+    --END AS is_same_target
   FROM
     `{bq_dataset}.campaign_settings` C
   LEFT JOIN targets AS T
