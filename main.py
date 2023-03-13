@@ -43,7 +43,7 @@ def home():
     that redirects to it."""
 
     with open(_CONFIG_FILE_PATH, 'r') as f:
-        config_data = yaml.load(f, Loader=yaml.FullLoader)
+        config_data = yaml.load(f, Loader=yaml.SafeLoader)
         gaarf_data = config_data.get('gaarf')
         bq_data = gaarf_data.get('bq')
 
