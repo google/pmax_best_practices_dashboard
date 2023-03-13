@@ -24,4 +24,4 @@ FROM ad_group_ad
 WHERE
     segments.date >= "{start_date}"
     AND segments.date <= "{end_date}"
-    AND campaign.advertising_channel_type IN ("PERFORMANCE_MAX", "SEARCH")
+    AND campaign.advertising_channel_type IN ('PERFORMANCE_MAX', 'SEARCH')

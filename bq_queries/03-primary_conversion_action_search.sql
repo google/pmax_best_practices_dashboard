@@ -24,8 +24,12 @@ AS (
      GROUP BY account_id, conversion_action_id
   )
   SELECT
-    account_id,
-    conversion_action_id
-  FROM convActionFreq
+    caf.account_id,
+    caf.conversion_action_id,
+    ANY_VALUE(cs.conversion_name)
+  FROM convActionFreq caf
+  JOIN `{bq_dataset}.conversion_split` cs
+  USING (conversion_action_id)
   WHERE row_num = 1
+  GROUP BY 1, 2
 )

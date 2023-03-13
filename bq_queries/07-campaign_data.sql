@@ -14,7 +14,7 @@
 
 CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaign_data`
 AS (
-  WITH targets AS (
+  WITH targets_raw AS (
     SELECT
       account_id,
       campaign_id,
@@ -32,6 +32,15 @@ AS (
     END AS tcpa
 
     FROM `{bq_dataset}.campaign_settings` 
+  ),
+  targets AS (
+    SELECT 
+      account_id,
+      campaign_id,
+      ANY_VALUE(troas) AS troas,
+      ANY_VALUE(tcpa) AS tcpa
+    FROM targets_raw
+    GROUP BY 1, 2
   ),
   search_targets AS (
     SELECT
@@ -56,7 +65,7 @@ AS (
   search_campaigns_freq AS (
     SELECT 
       account_id,
-      APPROX_TOP_COUNT(conversion_action_id, 1)[SAFE_OFFSET(0)].value AS conversion_action_id
+      APPROX_TOP_COUNT(conversion_name, 1)[SAFE_OFFSET(0)].value AS conversion_name
     FROM `{bq_dataset}.tcpa_search`
     GROUP BY 1
   ),
@@ -71,17 +80,13 @@ AS (
   ),
   search_campaign_data AS (
     SELECT
-      S.account_id,
-      F.conversion_action_id AS most_used_conversion,
-      S.conversion_name AS primary_conversion_search,
+      F.account_id,
+      F.conversion_name AS primary_conversion_search,
       CPA.average_search_tcpa AS average_search_tcpa,
       CPA.average_search_troas AS average_search_troas
-    FROM `{bq_dataset}.tcpa_search` S
-    JOIN search_campaigns_freq F
-        ON S.account_id = F.account_id
-        AND S.conversion_action_id = F.conversion_action_id
+    FROM search_campaigns_freq F
     JOIN search_campaigns_avg_cpa AS CPA
-        ON S.account_id = CPA.account_id
+        ON F.account_id = CPA.account_id
    ) --,
   -- budget_constrained as (
   --   SELECT 
