@@ -26,7 +26,7 @@ AS (
   SELECT
     caf.account_id,
     caf.conversion_action_id,
-    ANY_VALUE(cs.conversion_name)
+    ANY_VALUE(cs.conversion_name) AS conversion_name
   FROM convActionFreq caf
   JOIN `{bq_dataset}.conversion_split` cs
   USING (conversion_action_id)
