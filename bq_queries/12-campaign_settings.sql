@@ -78,7 +78,7 @@ SELECT
     ABP.image_score,
     CBP.campaign_bp_score
 FROM `{bq_dataset}.campaign_settings` C
-LEFT JOIN targets T USING(account_id, campaign_id)
+LEFT JOIN targets T USING(account_id, campaign_id, date)
 LEFT JOIN assetgroupbestpractices ABP 
   ON C.date = ABP.date_
   AND C.account_id = ABP.account_id
