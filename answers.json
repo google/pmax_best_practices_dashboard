@@ -1,24 +1,28 @@
 {
   "use_current_project": true,
   "name": "pmax",
+  "gcs_bucket": "",
   "path_to_ads_queries": "google_ads_queries",
   "path_to_bq_queries": "bq_queries",
-  "path_to_googleads_config": "google-ads.yaml",
   "custom_ids_query_path": "get-accounts.sql",
+  "use_googleads_config": true,
+  "path_to_googleads_config": "google-ads.yaml",
   "cf_memory": "2048MB",
   "deploy_scripts": true,
   "deploy_wf": true,
   "output_dataset": "pmax_ads",
   "ads_macro": {
     "start_date": ":YYYYMMDD-90",
-    "end_date": ":YYYYMMDD"
+    "end_date": ":YYYYMMDD-1"
   },
   "bq_macro": {
     "bq_dataset": "pmax_ads"
   },
   "schedule_wf": true,
-  "schedule_time": "06:00",
-  "//clone_dashboard": true,
+  "schedule_time": "04:00",
+  "run_job": false,
+  "run_wf": true,
+  "clone_dashboard": true,
   "dashboard_id": "6e773f65-7612-45af-af37-e3cab6a9828b",
   "dashboard_name": "pMax Best Practices Dashboard",
   "dashboard_dataset": "pmax_ads_bq",
