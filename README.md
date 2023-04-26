@@ -39,11 +39,11 @@ Follow instructions in [this video](https://www.youtube.com/watch?v=KFICa7Ngzng)
 
 * Enter GCP Cloud Shell command-line
 * Clone solution repository by entering the command:
-git clone https://professional-services.googlesource.com/solutions/pmax_dashboard --depth=1
-* Go to the directory of the solution : cd pmax_dashboard
-* Upload google-ads.yaml into the same directory
-* Launch the command: rm -rf \~/.npm/
-* Launch the command : npm init gaarf-wf --answers=answers.json
+`git clone https://professional-services.googlesource.com/solutions/pmax_dashboard --depth=1`
+* Go to the directory of the solution: `cd pmax_dashboard`
+* Upload your `google-ads.yaml` into the same directory
+* Launch the command: `rm -rf \~/.npm/`
+* Launch the command: `npm init gaarf-wf -- --answers=answers.json`
 * Follow the instructions
 
 ### Usage
