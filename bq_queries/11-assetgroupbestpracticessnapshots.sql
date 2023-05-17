@@ -50,11 +50,11 @@ image_data AS (
     asset_group_id,
     count_images,
     count_logos,
-    count_rectangular,
-    count_rectangular_logos,
+    count_landscape,
+    count_landscape_logos,
     count_square,
     count_square_logos,
-    (IF(count_images >= 15,1,0)+IF(count_logos >= 5,1,0)+IF(count_rectangular >= 1,1,0)+IF(count_rectangular_logos >= 1,1,0)+IF(count_square >= 1,1,0)+IF(count_square_logos >= 1,1,0))/6 AS image_score
+    (IF(count_images >= 20,1,0)+IF(count_logos >= 5,1,0)+IF(count_landscape >= 1,1,0)+IF(count_landscape_logos >= 1,1,0)+IF(count_square >= 1,1,0)+IF(count_square_logos >= 1,1,0))/6 AS image_score
   FROM `{bq_dataset}_bq.image_assets`
 )
 SELECT
@@ -74,8 +74,8 @@ SELECT
     IF(T.count_short_headlines >= 1,"Yes","X") AS count_short_headlines,
     IF(I.count_images >= 15,"Yes","X") AS count_images,
     IF(I.count_logos >= 5,"Yes","X") AS count_logos,
-    IF(I.count_rectangular >= 1,"Yes","X") AS count_rectangular,
-    IF(I.count_rectangular_logos >= 1,"Yes","X") AS count_rectangular_logos,
+    IF(I.count_landscape >= 1,"Yes","X") AS count_landscape,
+    IF(I.count_landscape_logos >= 1,"Yes","X") AS count_landscape_logos,
     IF(I.count_square >= 1,"Yes","X") AS count_square,
     IF(I.count_square_logos >= 1,"Yes","X") AS count_square_logos,
     V.video_score,

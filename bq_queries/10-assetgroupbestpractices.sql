@@ -75,12 +75,12 @@ SELECT
     IF(count_headlines < 5, 5 - count_headlines, 0) AS missing_headlines,
     IF(count_long_headlines < 5, 5 - count_long_headlines, 0) AS missing_long_headlines,
     IF((count_landscape + count_square + count_portrait) < 20, 20 - (count_landscape + count_square), 0) AS missing_images,
-    IF(count_landscape = 0, 'No landscape', 0) AS missing_landscape,
-    IF(count_square = 0, 'No square', 0) AS missing_square,
-    IF(count_portrait = 0, 'No portrait', 0) AS missing_portrait,
+    IF(count_landscape = 0, 1, 0) AS missing_landscape,
+    IF(count_square = 0, 1, 0) AS missing_square,
+    IF(count_portrait = 0, 1, 0) AS missing_portrait,
     IF(count_logos < 5, 5 - count_logos, 0) AS missing_logos,
-    IF(count_square_logos = 0, 'No square logos', 0) AS missing_square_logos,
-    IF(count_landscape_logos = 0, 'No landscape logos', 0) AS missing_landscape_logos
+    IF(count_square_logos = 0, 1, 0) AS missing_square_logos,
+    IF(count_landscape_logos = 0, 1, 0) AS missing_landscape_logos
 FROM `{bq_dataset}.assetgroupsummary` AGS
 JOIN video_data V USING (account_id, campaign_id, asset_group_id)
 JOIN text_data T USING (account_id,campaign_id, asset_group_id)
