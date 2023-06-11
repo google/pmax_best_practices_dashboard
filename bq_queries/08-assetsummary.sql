@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+cd # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,4 +31,5 @@ FROM `{bq_dataset}.assetgroupasset` AGA
 JOIN `{bq_dataset}.asset` A USING(account_id,asset_id)
 JOIN `{bq_dataset}.assetgroupsummary` AGS USING(asset_group_id)
 WHERE AGA.asset_performance NOT IN ('PENDING','UNKNOWN')
+AND campaign_id IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`)
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
