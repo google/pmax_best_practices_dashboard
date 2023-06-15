@@ -71,16 +71,17 @@ SELECT
     T.text_score,
     I.image_score,
     --(IF(count_descriptions<5,5-count_descriptions,0) + IF(count_headlines<5,5-count_headlines,0) + IF(count_long_headlines<5,5 - count_long_headlines,0) + IF(count_short_descriptions<1,1,0) + IF(count_short_headlines<1,1,0) + IF(count_images<15,15-count_images,0) + IF(count_logos<5,5-count_logos,0) + IF(count_landscape<1,1,0) + IF(count_square<1,1,0) + IF(count_square_logos<1,1,0)) AS num_missing_assets,
-    IF(count_descriptions < 5, 5 - count_descriptions, 0) AS missing_descriptions,
+    IF(count_descriptions < 4, 4 - count_descriptions, 0) AS missing_descriptions,
     IF(count_headlines < 5, 5 - count_headlines, 0) AS missing_headlines,
     IF(count_long_headlines < 5, 5 - count_long_headlines, 0) AS missing_long_headlines,
     IF((count_landscape + count_square + count_portrait) < 20, 20 - (count_landscape + count_square), 0) AS missing_images,
-    IF(count_landscape = 0, 1, 0) AS missing_landscape,
-    IF(count_square = 0, 1, 0) AS missing_square,
+    IF(count_landscape < 3, 1, 0) AS missing_landscape,
+    IF(count_square < 3, 1, 0) AS missing_square,
     IF(count_portrait = 0, 1, 0) AS missing_portrait,
     IF(count_logos < 5, 5 - count_logos, 0) AS missing_logos,
     IF(count_square_logos = 0, 1, 0) AS missing_square_logos,
-    IF(count_landscape_logos = 0, 1, 0) AS missing_landscape_logos
+    IF(count_landscape_logos = 0, 1, 0) AS missing_landscape_logos,
+    IF(video_score = 0, 1, 0) AS missing_video
 FROM `{bq_dataset}.assetgroupsummary` AGS
 JOIN video_data V USING (account_id, campaign_id, asset_group_id)
 JOIN text_data T USING (account_id,campaign_id, asset_group_id)
