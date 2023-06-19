@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this walkthrough, you'll deploy and configure the pMAx Dashboard.
+In this walkthrough, you'll generate OAuth credentials in preparation for the deployment of the pMax Best Practices Dashboard.
 
 <walkthrough-tutorial-difficulty difficulty="3"></walkthrough-tutorial-difficulty>
 <walkthrough-tutorial-duration duration="10"></walkthrough-tutorial-duration>
@@ -41,7 +41,7 @@ For details, see
     You can copy the name below and enter it as the application name.
 
     ```
-    gke_identity_aware_proxy
+    pMax Best Practices Dashboard
     ```
 
 1.  For the **Support email** dropdown menu, select the email address you want
@@ -53,6 +53,13 @@ Click
     <walkthrough-spotlight-pointer cssSelector=".cfc-stepper-step-continue-button">**Save
     and continue**</walkthrough-spotlight-pointer>.
     
+## Turn on Google Cloud APIs
+
+Enable the Google Ads API and the BigQuery API so that this is incorporated in the credentials you will generate in the next step.
+
+<walkthrough-enable-apis apis="networkmanagement.googleapis.com,bigquery">
+</walkthrough-enable-apis>
+
 ## Creating OAuth credentials
 
 1.  On the APIs & Services page, click the
@@ -74,14 +81,6 @@ Click
 1.  Click **Create**. Your OAuth client ID and client secret are generated and
     displayed on the OAuth client window. Do not close the screen yet.    
 
-## Turn on Google Cloud APIs
-
-Dataflow processes data in many GCP data stores and messaging services,
-including BigQuery, Google Cloud Storage, and Cloud Pub/Sub. Enable the APIs for
-these services to take advantage of Dataflow's data processing capabilities.
-
-<walkthrough-enable-apis apis="networkmanagement.googleapis.com,bigquery">
-</walkthrough-enable-apis>
 
 ## Change directory
 
@@ -98,11 +97,7 @@ google-ads.yaml
 
 
 ```bash
-rm -rf \~/.npm/
-```
-
-```bash
-npm init gaarf-wf -- --answers=answers.json
+npm init gaarf-wf@latest -- --answers=answers.json
 ```
 
 
