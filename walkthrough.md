@@ -57,7 +57,7 @@ Click
 
 Enable the Google Ads API and the BigQuery API so that this is incorporated in the credentials you will generate in the next step.
 
-<walkthrough-enable-apis apis="networkmanagement.googleapis.com,bigquery">
+<walkthrough-enable-apis apis="bigquery.googleapis.com,googleads.googleapis.com">
 </walkthrough-enable-apis>
 
 ## Creating OAuth credentials
