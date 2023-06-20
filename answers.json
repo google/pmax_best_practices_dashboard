@@ -5,7 +5,6 @@
   "path_to_ads_queries": "google_ads_queries",
   "path_to_bq_queries": "bq_queries",
   "custom_ids_query_path": "get-accounts.sql",
-  "use_googleads_config": true,
   "path_to_googleads_config": "google-ads.yaml",
   "cf_memory": "2048MB",
   "deploy_scripts": true,
