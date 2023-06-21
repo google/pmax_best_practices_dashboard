@@ -52,10 +52,21 @@ For details, see
 Click
     <walkthrough-spotlight-pointer cssSelector=".cfc-stepper-step-continue-button">**Save
     and continue**</walkthrough-spotlight-pointer>.
-    
-## Turn on Google Cloud APIs
 
-Enable the Google Ads API and the BigQuery API so that this is incorporated in the credentials you will generate in the next step.
+## Add Sensitive Scopes to Consent Screen
+
+1. Click <walkthrough-spotlight-pointer locator="semantic({button 'Add or remove scopes'})">Add or remove scopes</walkthrough-spotlight-pointer>
+
+1. Now in <walkthrough-spotlight-pointer locator="semantic({combobox 'Filter'})">Enter property name or value</walkthrough-spotlight-pointer> search for the BigQuery API, check the box to choose it.
+
+1. Do the same for Google Ads API.
+
+1. Click <walkthrough-spotlight-pointer locator="text('Update')">Update</walkthrough-spotlight-pointer>
+
+
+## Enable Google Cloud APIs
+
+Enable the Google Ads API and the BigQuery API so that they're incorporated in the credentials you will generate in the next step.
 
 <walkthrough-enable-apis apis="bigquery.googleapis.com,googleads.googleapis.com">
 </walkthrough-enable-apis>
@@ -83,10 +94,6 @@ Enable the Google Ads API and the BigQuery API so that this is incorporated in t
 
 
 ## Change directory
-
-```bash
-cd pmax_dashboard --isn't needed
-```
 
 Edit yaml?
 <walkthrough-editor-select-line filePath="google-ads.yaml"
