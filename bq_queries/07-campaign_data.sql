@@ -78,6 +78,22 @@ AS (
       search_targets
     GROUP BY 1
   ),
+  asset_groups_count AS (
+    SELECT 
+      COUNT(DISTINCT ASA.asset_group_id) AS number_of_asset_groups,
+      ASA.campaign_id AS campaign_id
+    FROM `{bq_dataset}.assetgroupasset` ASA
+    GROUP BY campaign_id
+  ),
+  audience_signals_count AS (
+    SELECT 
+      COUNT(DISTINCT AGS.asset_group_id) AS number_of_audience_signals, 
+      AGS.campaign_id AS campaign_id
+    FROM `{bq_dataset}.assetgroupsignal` AGS
+    GROUP BY 
+      campaign_id,
+      asset_group_id
+  ),
   search_campaign_data AS (
     SELECT
       F.account_id,
@@ -113,7 +129,7 @@ AS (
     T.tcpa,
     C.gmc_id,
     C.optiscore,
-    IF(C.audience_signals=true,"Yes","X") AS audience_signals,
+    --IF(C.audience_signals=true,"Yes","X") AS audience_signals,
     C.cost/1e6 AS cost,
     C.conversions,
     C.conversions_value,
@@ -134,6 +150,11 @@ AS (
         THEN T.troas
       ELSE NULL
     END AS target_value,
+    CASE
+      WHEN ASCC.number_of_audience_signals IS NULL
+        THEN 0
+      ELSE (100 * ASCC.number_of_audience_signals) / AGC.number_of_asset_groups
+    END AS audience_signals_score,
     --CASE
     --  WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
     --    THEN IF(T.tcpa = SCD.average_search_tcpa,"Yes","X") 
@@ -152,4 +173,8 @@ AS (
   LEFT JOIN `{bq_dataset}_bq.primary_conversion_action_pmax` AS PCA
     ON PCA.account_id = C.account_id
     AND PCA.campaign_id = C.campaign_id
+  LEFT JOIN asset_groups_count AS AGC
+    ON C.campaign_id = AGC.campaign_id
+  LEFT JOIN audience_signals_count AS ASCC
+    ON C.campaign_id = ASCC.campaign_id
 )

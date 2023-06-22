@@ -57,7 +57,17 @@ image_data AS (
     count_square_logos,
     (IF(count_images >= 15,1,0)+IF(count_logos >= 5,1,0)+IF(count_landscape >= 1,1,0)+IF(count_landscape_logos >= 1,1,0)+IF(count_square >= 1,1,0)+IF(count_square_logos >= 1,1,0))/6 AS image_score
   FROM `{bq_dataset}_bq.image_assets`
-)
+),
+audience_signals_count AS (
+    SELECT 
+      COUNT(DISTINCT AGS.asset_group_id) AS number_of_audience_signals, 
+      AGS.campaign_id AS campaign_id,
+      AGS.asset_group_id
+    FROM `{bq_dataset}.assetgroupsignal` AGS
+    GROUP BY 
+      campaign_id,
+      asset_group_id
+  )
 SELECT
     AGS.account_id,
     AGS.account_name,
@@ -81,9 +91,13 @@ SELECT
     IF(count_logos < 5, 5 - count_logos, 0) AS missing_logos,
     IF(count_square_logos = 0, 1, 0) AS missing_square_logos,
     IF(count_landscape_logos = 0, 1, 0) AS missing_landscape_logos,
-    IF(video_score = 0, 1, 0) AS missing_video
+    IF(video_score = 0, 1, 0) AS missing_video,
+    IF(ASA.number_of_audience_signals IS NOT NULL,"Yes","X") AS audience_signals
 FROM `{bq_dataset}.assetgroupsummary` AGS
 JOIN video_data V USING (account_id, campaign_id, asset_group_id)
 JOIN text_data T USING (account_id,campaign_id, asset_group_id)
 JOIN image_data I USING (account_id,campaign_id, asset_group_id)
-WHERE campaign_id IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`)
+LEFT JOIN audience_signals_count AS ASA
+ ON AGS.campaign_id = ASA.campaign_id
+ AND AGS.asset_group_id = ASA.asset_group_id
+WHERE AGS.campaign_id IN (SELECT campaign_id FROM `pmax_ads.campaign_settings`)
