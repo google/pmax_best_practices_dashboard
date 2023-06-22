@@ -40,7 +40,8 @@ SELECT
     campaign.audience_setting.use_audience_grouped as audience_signals,
     metrics.cost_micros AS cost,
     metrics.conversions AS conversions,
-    metrics.conversions_value AS conversions_value
+    metrics.conversions_value AS conversions_value,
+    metrics.all_conversions_value AS all_conversions_value
 FROM campaign
 WHERE campaign.advertising_channel_type = "PERFORMANCE_MAX"
     AND segments.date >= "{start_date}"
