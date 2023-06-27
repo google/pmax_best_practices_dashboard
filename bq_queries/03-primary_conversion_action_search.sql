@@ -13,23 +13,76 @@
 # limitations under the License.
 
 CREATE OR REPLACE TABLE `{bq_dataset}_bq.primary_conversion_action_search`
-AS (
-  WITH convActionFreq AS (
-     SELECT
-        account_id,
-        conversion_action_id,
-        ROW_NUMBER() OVER (PARTITION BY account_id ORDER BY SUM(conversions) DESC ) AS row_num
-     FROM `{bq_dataset}.conversion_split`
-     WHERE campaign_type = "SEARCH"
-     GROUP BY account_id, conversion_action_id
-  )
+AS
+  WITH conversion_account_level AS (
+    SELECT
+      account_id,
+      campaign_id,
+      campaign_type,
+      conversion_name
+    FROM `{bq_dataset}.conversion_category`
+    GROUP BY 1,2,3,4
+),
+conversion_split AS (
+    SELECT
+      account_id,
+      campaign_id,
+      campaign_type,
+      ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
+    FROM conversion_account_level
+    GROUP BY 1,2,3
+    UNION ALL
+    SELECT
+      account_id,
+      campaign_id,
+      campaign_type,
+      custom_conversion_goal_name AS conversion_name
+    FROM `{bq_dataset}.conversion_custom`
+    JOIN `{bq_dataset}.custom_goal_names` USING (account_id,custom_conversion_goal_id)
+),
+conversion_split_grouped_w_custom AS (
   SELECT
-    caf.account_id,
-    caf.conversion_action_id,
-    ANY_VALUE(cs.conversion_name) AS conversion_name
-  FROM convActionFreq caf
-  JOIN `{bq_dataset}.conversion_split` cs
-  USING (conversion_action_id)
+      account_id,
+      campaign_id,
+      campaign_type,
+      ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
+  FROM conversion_split
+  GROUP BY 1,2,3
+),
+convActionFreq AS (
+    SELECT
+      account_id,
+      campaign_type,
+      conversion_name,
+      RANK() OVER (PARTITION BY account_id, campaign_type ORDER BY COUNT(DISTINCT campaign_id) DESC) AS row_num
+    FROM conversion_split_grouped_w_custom
+    WHERE campaign_type = "SEARCH"
+    GROUP BY account_id, conversion_name, campaign_type
+),
+convActionFreq_grouped AS (
+  SELECT
+      account_id,
+      campaign_type,
+      row_num,
+      conversion_name
+      --ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
+  FROM convActionFreq
+  GROUP BY 1,2,3
+),
+most_used_conversions AS (
+  SELECT
+    cs.account_id,
+    cs.campaign_id,
+    cf.conversion_name
+    --ARRAY_TO_STRING(ARRAY_AGG(cf.conversion_name),",") AS conversion_name
+  FROM conversion_split_grouped_w_custom cs
+  JOIN convActionFreq_grouped cf USING (account_id)
   WHERE row_num = 1
-  GROUP BY 1, 2
+  AND cs.campaign_type = "SEARCH"
+  GROUP BY 1,2,3
 )
+SELECT
+  account_id,
+  conversion_name
+FROM most_used_conversions
+GROUP BY 1,2
