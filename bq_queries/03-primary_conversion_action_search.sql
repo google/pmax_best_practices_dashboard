@@ -67,7 +67,7 @@ convActionFreq_grouped AS (
       conversion_name
       --ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
   FROM convActionFreq
-  GROUP BY 1,2,3
+  GROUP BY 1,2,3,4
 ),
 most_used_conversions AS (
   SELECT

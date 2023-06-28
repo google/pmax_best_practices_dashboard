@@ -19,4 +19,4 @@ SELECT
 FROM 
     asset_group_signal 
 WHERE 
-    audience_signals IS NOT NULL
+    asset_group_signal.audience.audience IS NOT NULL
