@@ -100,4 +100,4 @@ JOIN image_data I USING (account_id,campaign_id, asset_group_id)
 LEFT JOIN audience_signals_count AS ASA
  ON AGS.campaign_id = ASA.campaign_id
  AND AGS.asset_group_id = ASA.asset_group_id
-WHERE AGS.campaign_id IN (SELECT campaign_id FROM `pmax_ads.campaign_settings`)
+WHERE AGS.campaign_id IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`)

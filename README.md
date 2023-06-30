@@ -41,7 +41,8 @@ Follow instructions in [this video](https://www.youtube.com/watch?v=KFICa7Ngzng)
 * Clone solution repository by entering the command:
 `git clone https://github.com/google/pmax_best_practices_dashboard`
 * Go to the directory of the solution : `cd pmax_dashboard`
-* Upload google-ads.yaml file into the same directory
+* Upload your google-ads.yaml file into the same directory. 
+If you are running it for an MCC, please set the login_customer_id to the MCC id.
 * Launch the command : `npm init gaarf-wf@latest -- --answers=answers.json`
 * Follow the instructions
 
