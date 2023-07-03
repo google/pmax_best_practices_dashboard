@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaignbpscore_${format(today(),'yyyyMMdd')}` AS
 SELECT
-  date,
-  account_id,
-  account_name,
-  campaign_id,
-  campaign_name,
-  round((if(url_expansion_opt_out=true,1,0)+audience_signals_score+if(missing_sitelinks=0,1,missing_sitelinks/4))/3,2) AS campaign_bp_score
-    --+if(daily_budget_3target="Yes",1,0)+if(is_same_conversion="Yes",1,0)+if(is_same_target="Yes",1,0)+if(is_daily_budget_140usd="Yes",1,0))/6,2) AS campaign_bp_score,
-FROM `{bq_dataset}_bq.campaign_data`
-GROUP BY 1,2,3,4,5,6
+  customer.descriptive_name as account_name,
+  campaign.id as campaign_id,
+  customer.id as account_id,
+  campaign.name as campaign_name,
+  campaign.advertising_channel_type as campaign_type,
+  campaign.status as campaign_status,
+  campaign_asset.field_type as asset_type
+FROM campaign_asset 
+WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
+AND campaign.status = 'ENABLED'

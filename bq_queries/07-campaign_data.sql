@@ -103,7 +103,19 @@ AS (
     FROM search_campaigns_freq F
     JOIN search_campaigns_avg_cpa AS CPA
         ON F.account_id = CPA.account_id
-   ) --,
+   ),
+   sitelinks_data AS (
+    SELECT
+      CA.account_id,
+      CA.account_name,
+      CA.campaign_id,
+      CA.campaign_name,
+      COUNT(*) AS count_sitelinks
+    FROM `{bq_dataset}.campaignasset` AS CA
+    WHERE CA.asset_type='SITELINK'
+    GROUP BY 1, 2, 3, 4
+   )
+    --,
   -- budget_constrained as (
   --   SELECT 
   --     account_id,
@@ -137,6 +149,11 @@ AS (
     PCA.conversion_name AS pmax_conversion,
     SCD.primary_conversion_search,
     CASE
+      WHEN SD.count_sitelinks IS NOT NULL
+        THEN IF (SD.count_sitelinks > 4, 0, 4 - SD.count_sitelinks) 
+      ELSE 4
+    END AS missing_sitelinks,
+    CASE
       WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
         THEN 'tCPA'
       WHEN T.troas IS NOT NULL AND T.troas > 0
@@ -153,7 +170,7 @@ AS (
     CASE
       WHEN ASCC.number_of_audience_signals IS NULL
         THEN 0
-      ELSE (100 * ASCC.number_of_audience_signals) / AGC.number_of_asset_groups
+      ELSE (ASCC.number_of_audience_signals) / AGC.number_of_asset_groups
     END AS audience_signals_score,
     --CASE
     --  WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
@@ -177,4 +194,6 @@ AS (
     ON C.campaign_id = AGC.campaign_id
   LEFT JOIN audience_signals_count AS ASCC
     ON C.campaign_id = ASCC.campaign_id
+  LEFT JOIN sitelinks_data AS SD
+    ON C.campaign_id = SD.campaign_id
 )
