@@ -62,22 +62,6 @@ AS (
     END AS tcpa
     FROM `{bq_dataset}.tcpa_search`
   ),
-  search_campaigns_freq AS (
-    SELECT 
-      account_id,
-      APPROX_TOP_COUNT(conversion_name, 1)[SAFE_OFFSET(0)].value AS conversion_name
-    FROM `{bq_dataset}.tcpa_search`
-    GROUP BY 1
-  ),
-  search_campaigns_avg_cpa AS (
-    SELECT 
-      account_id,
-      AVG(tcpa) AS average_search_tcpa,
-      AVG(troas) AS average_search_troas
-    FROM
-      search_targets
-    GROUP BY 1
-  ),
   asset_groups_count AS (
     SELECT 
       COUNT(DISTINCT ASA.asset_group_id) AS number_of_asset_groups,
@@ -94,16 +78,6 @@ AS (
       campaign_id,
       asset_group_id
   ),
-  search_campaign_data AS (
-    SELECT
-      F.account_id,
-      F.conversion_name AS primary_conversion_search,
-      CPA.average_search_tcpa AS average_search_tcpa,
-      CPA.average_search_troas AS average_search_troas
-    FROM search_campaigns_freq F
-    JOIN search_campaigns_avg_cpa AS CPA
-        ON F.account_id = CPA.account_id
-   ),
    sitelinks_data AS (
     SELECT
       CA.account_id,
@@ -147,7 +121,7 @@ AS (
     C.conversions_value,
     --coalesce(BC.budget_constrained,"No") AS budget_constrained,
     PCA.conversion_name AS pmax_conversion,
-    SCD.primary_conversion_search,
+    PCAS.conversion_name AS primary_conversion_search,
     CASE
       WHEN SD.count_sitelinks IS NOT NULL
         THEN IF (SD.count_sitelinks > 4, 0, 4 - SD.count_sitelinks) 
@@ -172,11 +146,6 @@ AS (
         THEN 0
       ELSE (ASCC.number_of_audience_signals) / AGC.number_of_asset_groups
     END AS audience_signals_score,
-    --CASE
-    --  WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
-    --    THEN IF(T.tcpa = SCD.average_search_tcpa,"Yes","X") 
-    --    ELSE IF(T.troas IS NOT NULL AND T.troas > 0, IF(troas = SCD.average_search_troas, "Yes", "X"),'null')
-    --END AS is_same_target
   FROM
     `{bq_dataset}.campaign_settings` C
   LEFT JOIN targets AS T
@@ -185,8 +154,8 @@ AS (
   --LEFT JOIN budget_constrained BC
   --  ON C.account_id = BC.account_id
   --  AND C.campaign_id = BC.campaign_id
-  LEFT JOIN search_campaign_data AS SCD
-    ON C.account_id = SCD.account_id
+  LEFT JOIN `{bq_dataset}_bq.primary_conversion_action_search` AS PCAS
+    ON C.account_id = PCAS.account_id
   LEFT JOIN `{bq_dataset}_bq.primary_conversion_action_pmax` AS PCA
     ON PCA.account_id = C.account_id
     AND PCA.campaign_id = C.campaign_id
