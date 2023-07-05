@@ -10,7 +10,7 @@
 In this walkthrough, you'll generate OAuth credentials in preparation for the deployment of the pMax Best Practices Dashboard.
 
 <walkthrough-tutorial-difficulty difficulty="2"></walkthrough-tutorial-difficulty>
-<walkthrough-tutorial-duration duration="45"></walkthrough-tutorial-duration>
+<walkthrough-tutorial-duration duration="20"></walkthrough-tutorial-duration>
 
 
 ## Google Cloud Project Setup
