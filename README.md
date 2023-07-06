@@ -58,6 +58,21 @@ Click on the blue Deploy button and follow the instructions:
 
 ### Usage
 
+In order to update the code execute the following commands in your Cloud Shell:
+
+```
+cd pmax_best_practices_dashboard
+git pull
+./deploy-scripts.sh
+```
+
+The following morning the changes will go into effect.
+
+If you would like to run the updated code right away, execute:
+```
+./run-wf.sh
+```
+
 ## Disclaimer
 
 ** This is not an officially supported Google product.**

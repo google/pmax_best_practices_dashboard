@@ -71,6 +71,7 @@ SELECT
     C.cost/1e6 AS cost,
     C.conversions,
     C.conversions_value,
+    C.all_conversions_value,
     ABP.video_score,
     ABP.text_score,
     ABP.image_score,
