@@ -122,6 +122,8 @@ AS (
     --coalesce(BC.budget_constrained,"No") AS budget_constrained,
     PCA.conversion_name AS pmax_conversion,
     PCAS.conversion_name AS primary_conversion_search,
+    IF (ASCC.number_of_audience_signals IS NOT NULL, ASCC.number_of_audience_signals, 0) AS number_of_audience_signals,
+    AGC.number_of_asset_groups AS number_of_asset_groups,
     CASE
       WHEN SD.count_sitelinks IS NOT NULL
         THEN IF (SD.count_sitelinks > 4, 0, 4 - SD.count_sitelinks) 
