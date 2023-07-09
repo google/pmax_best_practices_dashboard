@@ -88,7 +88,24 @@ AS (
     FROM `{bq_dataset}.campaignasset` AS CA
     WHERE CA.asset_type='SITELINK'
     GROUP BY 1, 2, 3, 4
+   ),
+   callouts_data AS (
+    SELECT
+      CA.campaign_id,
+      COUNT(*) AS count_callouts
+    FROM `{bq_dataset}.campaignasset` AS CA
+    WHERE CA.asset_type='CALLOUT'
+    GROUP BY 1
+   ),
+   structered_snippets_data AS (
+    SELECT
+      CA.campaign_id,
+      COUNT(*) AS count_structsnippets
+    FROM `{bq_dataset}.campaignasset` AS CA
+    WHERE CA.asset_type='STRUCTURED_SNIPPET'
+    GROUP BY 1
    )
+   
     --,
   -- budget_constrained as (
   --   SELECT 
@@ -130,6 +147,16 @@ AS (
       ELSE 4
     END AS missing_sitelinks,
     CASE
+      WHEN CD.count_callouts IS NOT NULL
+        THEN IF (CD.count_callouts >= 1, 0, 1) 
+      ELSE 1
+    END AS missing_callouts,
+    CASE
+      WHEN SSD.count_structsnippets IS NOT NULL
+        THEN IF (SSD.count_structsnippets >= 1, 0, 1) 
+      ELSE 1
+    END AS missing_structured_snippets,
+    CASE
       WHEN T.tcpa IS NOT NULL AND T.tcpa > 0
         THEN 'tCPA'
       WHEN T.troas IS NOT NULL AND T.troas > 0
@@ -167,4 +194,8 @@ AS (
     ON C.campaign_id = ASCC.campaign_id
   LEFT JOIN sitelinks_data AS SD
     ON C.campaign_id = SD.campaign_id
+  LEFT JOIN callouts_data AS CD
+    ON C.campaign_id = CD.campaign_id
+  LEFT JOIN structered_snippets_data AS SSD
+    ON C.campaign_id = SSD.campaign_id
 )
