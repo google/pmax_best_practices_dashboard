@@ -140,6 +140,12 @@ After generating the client_id and client_secret keep the confirmation screen op
 5. Now, click the new blue button **Exchange authorization code for tokens** ![Exchange authorization code for tokens](https://services.google.com/fh/files/misc/exchange_authorization_code_for_token.png)
 6. Finally, in the middle of the screen you'll see your refresh token on the last line.  Copy it and save it for future reference.  ![refresh_token](https://services.google.com/fh/files/misc/refresh_token.png) *Do not copy the quotation marks*
 
+##Join Google Group to access dashboard template
+
+Use [this link](https://groups.google.com/g/pmax-dashboard-template-readers/) to access the group URL and click on "Join Group"
+
+![join_group](https://services.google.com/fh/files/misc/join_group.png)
+
 ## Deploy Solution 
 
 Run the following command and follow the steps:

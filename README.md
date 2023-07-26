@@ -26,14 +26,9 @@ The pMax Dashboard is a LookerStudio dashboard providing an overview of your acc
 
   
 
-## Deployment
-
-  
-
 ## Prerequisites
 
-1. Check that you are part of [this group](https://groups.google.com/a/professional-services.goog/g/solutions_pmax_dashboard-readers/). 
-	If you are not, or nothing appears appon clicking the link, ask your Google POC to add you. 
+1. Join [this group](https://groups.google.com/g/pmax-dashboard-template-readers/).  
 
 
 1. Obtain a Developer token
