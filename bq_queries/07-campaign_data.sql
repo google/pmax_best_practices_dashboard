@@ -75,8 +75,7 @@ AS (
       AGS.campaign_id AS campaign_id
     FROM `{bq_dataset}.assetgroupsignal` AGS
     GROUP BY 
-      campaign_id,
-      asset_group_id
+      campaign_id
   ),
    sitelinks_data AS (
     SELECT
