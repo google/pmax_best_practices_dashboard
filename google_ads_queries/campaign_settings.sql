@@ -47,3 +47,4 @@ FROM campaign
 WHERE campaign.advertising_channel_type = "PERFORMANCE_MAX"
     AND segments.date >= "{start_date}"
     AND segments.date <= "{end_date}"
+    AND campaign.status = 'ENABLED'

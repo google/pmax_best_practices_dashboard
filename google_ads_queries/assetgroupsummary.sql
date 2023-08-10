@@ -24,3 +24,4 @@ SELECT
 FROM asset_group
 WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
 AND asset_group.status = 'ENABLED'
+AND campaign.status = 'ENABLED'
