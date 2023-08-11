@@ -30,7 +30,7 @@ For details, see
 
 Enable the Google Ads API and the BigQuery API so that they're incorporated in the credentials you will generate in the next step.
 
-<walkthrough-enable-apis apis="bigquery.googleapis.com,googleads.googleapis.com">
+<walkthrough-enable-apis apis="bigquery.googleapis.com,googleads.googleapis.com,bigquerydatatransfer.googleapis.com">
 </walkthrough-enable-apis>
 
 
