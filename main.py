@@ -26,7 +26,8 @@ _DATASOURCES_DICT = {
     "assets_performance": ("summaryassets", "pMax Assets Performance"),
     "asset_performance_snapshots": ("assetssnapshots_YYYYMMDD", "pMax Asset Performance Snapshots"),
     "scores": ("campaign_scores_union", "pMax Campaign Scores"),
-    "conversion_actions": ("campaign_conversion_action_name", "pMax Campaign Conversion Actions")
+    "conversion_actions": ("campaign_conversion_action_name", "pMax Campaign Conversion Actions"),
+    "product_group_summary": ("shopping_productgroupsummary", "pMax Product Group Summary")
 }
 
 _REPORT_ID = "6e773f65-7612-45af-af37-e3cab6a9828b"
