@@ -32,6 +32,8 @@
     "asset_group_bp": "assetgroupbestpractices",
     "asset_performance_snapshots": "assetssnapshots_*",
     "assets_performance": "summaryassets",
-    "scores": "campaign_scores_union"
+    "scores": "campaign_scores_union",
+    "conversion_actions": "campaign_conversion_action_name",
+    "product_group_summary": "shopping_productgroupsummary"
   }
 }

@@ -150,12 +150,14 @@ Use [this link](https://groups.google.com/g/pmax-dashboard-template-readers/) to
 
 Run the following command and follow the steps:
 
-Make sure to have your developer token and MCC ID on hand, in addition to the rest of the credentials generated in the previous steps.
+Make sure to have your developer token, your MCC ID and Merchant Center Id(*) on hand, in addition to the rest of the credentials generated in the previous steps.
+
+(*) if you would like to enhance your analysis for retail use cases.
 
 When prompted, choose N to enter credentials one by one.
 
 ```bash
-npm init gaarf-wf@latest -- --answers=answers.json
+sh setup-wfs.sh
 ```
 
 
