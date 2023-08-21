@@ -35,11 +35,11 @@ if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
 
         echo "creating a Data Transfer for Merchant Center in BigQuery..."
         bq_mk_params='{"merchant_id":"'$mcid'",'
-        bq_mk_params=+='"export_products":"true",'
-        bq_mk_params=+='"export_regional_inventories":"true",'
-        bq_mk_params=+='"export_local_inventories":"true",'
-        bq_mk_params=+='"export_price_benchmarks":"true",'
-        bq_mk_params=+='"export_best_sellers":"true"}'
+        bq_mk_params+='"export_products":"true",'
+        bq_mk_params+='"export_regional_inventories":"true",'
+        bq_mk_params+='"export_local_inventories":"true",'
+        bq_mk_params+='"export_price_benchmarks":"true",'
+        bq_mk_params+='"export_best_sellers":"true"}'
         bq mk --transfer_config \
             --project_id="$DEVSHELL_PROJECT_ID" \
             --data_source=merchant_center \
