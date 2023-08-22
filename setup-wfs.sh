@@ -29,6 +29,8 @@ if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
 
     if [[ "$mcid" =~ ^[0-9]+$ ]]; then
         
+        echo "\nis_retail: true" >> config.yaml
+        
         echo "creating a dataset in BigQuery named merchant_center_transfer..."
         # TODO: Make data_location dynamic:
         bq mk -d --data_location=EU merchant_center_transfer
