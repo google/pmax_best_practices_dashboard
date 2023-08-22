@@ -16,7 +16,6 @@ CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_gmc`
 AS (
     SELECT
       _PARTITIONDATE AS date,
-      REGEXP_REPLACE(string(_PARTITIONDATE), '([0-9]{4})-([0-9]{2})-([0-9]{2})', '\\2/\\3/\\1') AS converted_date,
       ARRAY_REVERSE(SPLIT(product_id,':'))[SAFE_OFFSET(0)] AS product_id,
       REGEXP_REPLACE(link,r'\?.*','') AS product_url,
       title,
@@ -32,5 +31,5 @@ AS (
       custom_labels.label_4,
     FROM 
       `merchant_center_transfer.Products_*`
-    GROUP BY 1,2,3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+    GROUP BY 1,2,3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
 )
