@@ -32,5 +32,5 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.shopping_joint_gads_gmc` AS (
     FROM 
       `{bq_dataset}_bq.shopping_gads` ADS
     JOIN `{bq_dataset}_bq.shopping_gmc` AS MC
-      ON ADS.item_id = MC.product_id
+      ON LOWER(ADS.item_id) = LOWER(MC.product_id)
 )

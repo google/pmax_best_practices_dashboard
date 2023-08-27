@@ -29,7 +29,7 @@ if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
 
     if [[ "$mcid" =~ ^[0-9]+$ ]]; then
         
-        echo "\nis_retail: true" >> config.yaml
+        echo -e "\nis_retail: true" >> config.yaml
         
         echo "creating a dataset in BigQuery named merchant_center_transfer..."
         # TODO: Make data_location dynamic:
@@ -40,7 +40,6 @@ if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
         bq_mk_params+='"export_products":"true",'
         bq_mk_params+='"export_regional_inventories":"true",'
         bq_mk_params+='"export_local_inventories":"true",'
-        bq_mk_params+='"export_price_benchmarks":"true",'
         bq_mk_params+='"export_best_sellers":"true"}'
         bq mk --transfer_config \
             --project_id="$DEVSHELL_PROJECT_ID" \
