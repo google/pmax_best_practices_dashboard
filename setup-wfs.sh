@@ -13,6 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+set -e
 
 until [[ "$yn" == [YyNn] ]]; do
     msg='Would you like to connect your Merchant Center accounts '
@@ -29,8 +30,8 @@ if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
 
     if [[ "$mcid" =~ ^[0-9]+$ ]]; then
         
-        echo -e "\nis_retail: true" >> config.yaml
-        
+        ./build-retail.sh
+                
         echo "creating a dataset in BigQuery named merchant_center_transfer..."
         # TODO: Make data_location dynamic:
         bq mk -d --data_location=EU merchant_center_transfer
