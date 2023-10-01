@@ -15,6 +15,8 @@
 # limitations under the License.
 set -e
 
+WORK_RETAIL="work_retail"
+
 until [[ "$yn" == [YyNn] ]]; do
     msg='Would you like to connect your Merchant Center accounts '
     msg+='for product performance insights? (y/n): '
@@ -31,17 +33,19 @@ if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
     if [[ "$mcid" =~ ^[0-9]+$ ]]; then
         
         ./build-retail.sh
-                
+        cd "$WORK_RETAIL"
+        if bq ls -d "$DEVSHELL_PROJECT_ID":merchant_center_transfer &>/dev/null; then
+            # Delete the dataset if it exists
+            echo "Dataset merchant_center_transfer already exists. Deleting..."
+            bq rm -r -f -d "$DEVSHELL_PROJECT_ID":merchant_center_transfer
+        fi        
         echo "creating a dataset in BigQuery named merchant_center_transfer..."
         # TODO: Make data_location dynamic:
         bq mk -d --data_location=EU merchant_center_transfer
 
         echo "creating a Data Transfer for Merchant Center in BigQuery..."
         bq_mk_params='{"merchant_id":"'$mcid'",'
-        bq_mk_params+='"export_products":"true",'
-        bq_mk_params+='"export_regional_inventories":"true",'
-        bq_mk_params+='"export_local_inventories":"true",'
-        bq_mk_params+='"export_best_sellers":"true"}'
+        bq_mk_params+='"export_products":"true"}'
         bq mk --transfer_config \
             --project_id="$DEVSHELL_PROJECT_ID" \
             --data_source=merchant_center \

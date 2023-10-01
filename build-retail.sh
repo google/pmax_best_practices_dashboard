@@ -29,7 +29,7 @@ CONVERSION_ACTION_TABLE="campaign_conversion_action_name"
 PRODUCT_TABLE_NAME="shopping_productgroupsummary"
 WORK_RETAIL="work_retail"
 
-
+mkdir -p "$WORK_RETAIL"
 cp -r bq_queries "$WORK_RETAIL"
 cp -r google_ads_queries "$WORK_RETAIL"
 cp -r "$RETAIL_QUERIES_DIRECTORY"/"$GOOGLE_ADS_QUERIES"/* "$WORK_RETAIL"/"$GOOGLE_ADS_QUERIES"/    
