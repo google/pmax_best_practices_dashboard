@@ -15,7 +15,6 @@
 # limitations under the License.
 set -e
 
-WORK_RETAIL="work_retail"
 
 until [[ "$yn" == [YyNn] ]]; do
     msg='Would you like to connect your Merchant Center accounts '
@@ -31,17 +30,14 @@ if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
     done
 
     if [[ "$mcid" =~ ^[0-9]+$ ]]; then
-        
-        ./build-retail.sh
-        cd "$WORK_RETAIL"
+        source ./build-retail.sh
         if bq ls -d "$DEVSHELL_PROJECT_ID":merchant_center_transfer &>/dev/null; then
             # Delete the dataset if it exists
             echo "Dataset merchant_center_transfer already exists. Deleting..."
             bq rm -r -f -d "$DEVSHELL_PROJECT_ID":merchant_center_transfer
         fi        
         echo "creating a dataset in BigQuery named merchant_center_transfer..."
-        # TODO: Make data_location dynamic:
-        bq mk -d --data_location=EU merchant_center_transfer
+        bq mk -d --data_location=$location merchant_center_transfer
 
         echo "creating a Data Transfer for Merchant Center in BigQuery..."
         bq_mk_params='{"merchant_id":"'$mcid'",'

@@ -29,6 +29,48 @@ CONVERSION_ACTION_TABLE="campaign_conversion_action_name"
 PRODUCT_TABLE_NAME="shopping_productgroupsummary"
 WORK_RETAIL="work_retail"
 
+regions=(
+  'asia-east1'
+  'asia-east2'
+  'asia-northeast1'
+  'asia-northeast2'
+  'asia-south1'
+  'asia-southeast1'
+  'australia-southeast1'
+  'europe-central2'
+  'europe-west1'
+  'europe-west2'
+  'europe-west3'
+  'europe-west6'
+  'northamerica-northeast1'
+  'southamerica-east1'
+  'us-central1'
+  'us-east1'
+  'us-east4'
+  'us-west1'
+  'us-west2'
+  'us-west3'
+  'us-west4'
+)
+
+# Asking the user to select a region that will be used for the gaarf workflow and the MC datatransfer bigquery dataset.
+echo "Please select a region for Cloud services (workflows, functions, scheduler, bigquery):"
+
+select region in "${regions[@]}"; do
+  if [[ -n $region ]]; then
+    echo "You selected region: $region"
+    break
+  else
+    echo "Invalid selection. Please try again."
+  fi
+done
+
+raw_location=$(echo $region | cut -d'-' -f1)
+
+case $raw_location in
+    europe*) location="EU";;
+    *) location="US";;
+esac
 mkdir -p "$WORK_RETAIL"
 cp -r bq_queries "$WORK_RETAIL"
 cp -r google_ads_queries "$WORK_RETAIL"
@@ -56,6 +98,9 @@ node - <<EOF
              // Add retail-related datasets to dashboard_datasources
              data.dashboard_datasources.conversion_actions = '${CONVERSION_ACTION_TABLE}';
              data.dashboard_datasources.product_group_summary = '${PRODUCT_TABLE_NAME}';
+
+             //Update Selected region to resion chosen in the setup
+             data.gcp_region = '${region}'
             }
 
             fs.writeFileSync(ANSWERS_FILE_PATH, JSON.stringify(data, null, 4));
