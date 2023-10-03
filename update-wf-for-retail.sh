@@ -17,9 +17,11 @@
 #This is a script to update code from git and re-run all queries for retail-pmax users. 
 set -e
 
+WORK_RETAIL="work_retail"
+
 git pull
 
 ./build-retail.sh
-
+cd "$WORK_RETAIL"
 ./deploy-scripts.sh
 ./run-wf.sh
