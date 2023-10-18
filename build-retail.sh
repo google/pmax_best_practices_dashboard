@@ -26,7 +26,9 @@ BQ_QUERIES_DIRECTORY="bq_queries"
 RETAIL_QUERIES_DIRECTORY="plugins/retail"
 ANSWERS="answers.json"
 CONVERSION_ACTION_TABLE="campaign_conversion_action_name"
-PRODUCT_TABLE_NAME="shopping_productgroupsummary"
+PRODUCTGROUP_TABLE_NAME="shopping_productgroupsummary"
+CAMPAIGN_PRODUCTGROUP_TABLE="shopping_campaignproducttype"
+LOWCLICKS_HIGHROAS_TABLE="shopping_lowclicks_highroas_producttype"
 WORK_RETAIL="work_retail"
 
 regions=(
@@ -97,9 +99,11 @@ node - <<EOF
 
              // Add retail-related datasets to dashboard_datasources
              data.dashboard_datasources.conversion_actions = '${CONVERSION_ACTION_TABLE}';
-             data.dashboard_datasources.product_group_summary = '${PRODUCT_TABLE_NAME}';
+             data.dashboard_datasources.product_group_summary = '${PRODUCTGROUP_TABLE_NAME}';
+             data.dashboard_datasources.campaign_product_group= '${CAMPAIGN_PRODUCTGROUP_TABLE}';
+             data.dashboard_datasources.lowclicks_highroas_producttype = '${LOWCLICKS_HIGHROAS_TABLE}';
 
-             //Update Selected region to resion chosen in the setup
+             //Update Selected region to region chosen in the setup
              data.gcp_region = '${region}'
             }
 
