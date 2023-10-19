@@ -1,4 +1,4 @@
-# pMax Best Practices Dashboard
+# pMaximizer (Formally pMax Best Practices Dashboard)
 
   
 
@@ -12,17 +12,16 @@ Reporting for pMax campaigns is cumbersome and advertisers need a simple way to 
 
 ## Solution
 
-  
+pMaximizer is a best practice dashboard that provides a centralized monitoring of the pMax campaigns' performance and the assets uploaded. Built in Looker Studio, It helps clearly identify if the campaigns and assets comply with the best practice guidelines and gives actionable insights to enhance asset groups' and feed quality.
 
-The pMax Dashboard is a LookerStudio dashboard providing an overview of your accounts' pmax campaigns' performance and the assets uploaded. Feedback is provided as to whether the campaigns comply with the best practice guidelines for the number and type of assets uploaded.  Moreover, assets' performance is displayed and conveniently presented so advertisers can refresh poorly performing assets.
+Moreover, assets' performance is displayed and conveniently presented so advertisers can refresh poorly performing assets.
 
-  
+
 
 ## Deliverable (Implementation)
 
   
-
-* LookerStudio dashboard based on your Google Ads data.
+* LookerStudio dashboard based on your Google Ads and Merchant Center data.
 
   
 
