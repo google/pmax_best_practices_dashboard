@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo "run-docker script triggered"
-ads_queries=$1
-bq_queries=$2
-ads_yaml=$3
-gaarf $ads_queries -c=/config.yaml --ads-config=$ads_yaml
-gaarf-bq $bq_queries/*.sql -c=/config.yaml
+CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_gads` AS (
+  SELECT
+    date,
+    campaign_name,
+    campaign_id,
+    product_item_id AS item_id,
+    product_brand AS brand, 
+    SUM(clicks) AS clicks,
+    SUM(conversions) AS conversions,
+    SUM(impressions) AS impressions,
+    SUM(conversions_value) AS conversions_value,
+    SUM(cost) AS cost,
+    SUM(ctr) AS ctr
+  FROM 
+    `{bq_dataset}.shoppingperformance_view`
+  GROUP BY 1,2,3,4, 5
+)

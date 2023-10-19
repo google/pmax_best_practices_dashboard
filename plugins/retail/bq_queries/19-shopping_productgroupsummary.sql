@@ -12,8 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-google-ads-api-report-fetcher
-db-dtypes
-flask
-gunicorn
-pyyaml
+CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_productgroupsummary`
+AS (
+    SELECT
+      product_type,
+      SUM(clicks) AS clicks,
+      SUM(impressions) AS impressions,
+      # ctr = clicks/impressions*100
+      SUM(cost/1e6) AS sum_cost,
+      SUM(conversions_value) AS sum_conversions_value 
+      # roas = conversions_value/cost
+    FROM 
+      `{bq_dataset}_bq.shopping_joint_gads_gmc` 
+    GROUP BY (product_type)
+)

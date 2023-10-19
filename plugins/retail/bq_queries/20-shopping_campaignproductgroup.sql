@@ -12,22 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-gaarf:
-  output: bq
-  bq:
-    project: YOUR-BQ-PROJECT
-    dataset: pmax_ads
-    location: YOUR-REGION
-  # Do not change API version manually
-  api_version: 12
-  account: 'MCC-ID'
-  params:
-    macro:
-      start_date: ":YYYYMMDD-91"
-      end_date: ":YYYYMMDD-1"
-gaarf-bq:
-  project: YOUR-BQ-PROJECT
-  dataset_location: YOUR-REGION
-  params:
-    macro:
-      bq_dataset: pmax_ads
+CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_campaignproducttype`
+AS (
+    SELECT
+      campaign_name,
+      product_type,
+      SUM(clicks) AS clicks,
+      SUM(impressions) AS impressions,
+      # ctr = clicks/impressions*100
+      SUM(cost/1e6) AS sum_cost,
+      SUM(conversions_value) AS sum_conversions_value 
+      # roas = conversions_value/cost
+    FROM 
+      `{bq_dataset}_bq.shopping_joint_gads_gmc` 
+    GROUP BY campaign_name, product_type
+)

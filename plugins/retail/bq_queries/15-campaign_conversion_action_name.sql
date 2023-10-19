@@ -12,14 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.10
-ADD requirements.txt .
-RUN pip install --require-hashes -r requirements.txt
-ADD google_ads_queries/ google_ads_queries/
-ADD bq_queries/ bq_queries/
-ADD scripts/ .
-ADD google-ads.yaml .
-ADD config.yaml .
-ADD main.py .
-RUN chmod a+x run-docker.sh
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
+
+
+CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaign_conversion_action_name` AS (
+SELECT 
+campaign_id,
+campaign_name,
+conversion_action_name, 
+conversion_action_category,
+sum(all_conversions) AS all_conversions,
+sum(all_conversions_value) AS all_conversions_value,
+sum(conversions) AS conversions,
+sum(view_through_conversions) AS view_thrupgh_conversions,
+sum(value_per_conversion) AS value_per_conversion
+FROM `{bq_dataset}.campaignconversionaction`
+GROUP BY campaign_id, campaign_name, conversion_action_name, conversion_action_category
+)
