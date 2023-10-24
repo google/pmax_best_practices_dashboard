@@ -44,9 +44,6 @@ Click <walkthrough-spotlight-pointer spotlightId="cloud-shell-more-button" targe
 
 Copy the following command into the shell, press enter and follow the instructions:
 ```bash
-cd
-git clone https://github.com/google/pmax_best_practices_dashboard.git
-cd pmax_best_practices_dashboard
 gcloud auth login
 ```
 
