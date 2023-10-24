@@ -40,7 +40,7 @@ First, let's switch off your shell's ephemeral mode.
 
 Click <walkthrough-spotlight-pointer spotlightId="cloud-shell-more-button" target="cloudshell" title="Show me where">**More**</walkthrough-spotlight-pointer> and look for the `Ephemeral Mode` option. If it is turned on turn it off. This allows the dashboard code to persist across sessions.
 
-## Clone Repository and Authorize
+## Authorize shell scripts commands
 
 Copy the following command into the shell, press enter and follow the instructions:
 ```bash
