@@ -1,4 +1,4 @@
-# pMaximizer (Formally pMax Best Practices Dashboard)
+# pMaximizer (Formally pMaximizer (Formally pMax Best Practices Dashboard))
 
 In this README, you'll find:
   
@@ -34,6 +34,8 @@ Moreover, assets' performance is displayed and conveniently presented so adverti
 A Looker Studio dashboard based on your Google Ads and Merchant Center data. After joining the group below, [click here](https://lookerstudio.google.com/c/reporting/755d5896-5c56-4f5a-9075-79249137c9ea/page/i5YsC) to see it in action.
 
 [![pMaximizer](https://services.google.com/fh/files/misc/pmaximizer-screenshots.png)](https://lookerstudio.google.com/c/reporting/755d5896-5c56-4f5a-9075-79249137c9ea/page/i5YsC)
+* LookerStudio dashboard based on your Google Ads and Merchant Center data.
+
   
 
 ## Prerequisites
