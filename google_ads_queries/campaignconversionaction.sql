@@ -23,7 +23,7 @@ SELECT
     segments.conversion_action_category as conversion_action_category,
     segments.conversion_action as conversion_action_id,
     segments.conversion_action_name as conversion_action_name, 
-    segments.date,
+    segments.date as date,
     metrics.all_conversions as all_conversions, 
     metrics.all_conversions_by_conversion_date as all_conversions_by_conversion_date,
     metrics.all_conversions_value as all_conversions_value,
