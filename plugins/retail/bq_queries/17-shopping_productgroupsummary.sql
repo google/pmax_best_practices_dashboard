@@ -12,24 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_gmc` 
+CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_productgroupsummary`
 AS (
     SELECT
-      _PARTITIONDATE AS date,
-      ARRAY_REVERSE(SPLIT(product_id,':'))[SAFE_OFFSET(0)] AS product_id,
-      REGEXP_REPLACE(link,r'\?.*','') AS product_url,
-      title,
-      image_link,
-      item_group_id,
-      google_product_category,
-      google_product_category_path,
+      date,
       product_type,
-      custom_labels.label_0,
-      custom_labels.label_1,
-      custom_labels.label_2,
-      custom_labels.label_3,
-      custom_labels.label_4,
+      SUM(clicks) AS clicks,
+      SUM(impressions) AS impressions,
+      # ctr = clicks/impressions*100
+      SUM(cost) AS sum_cost,
+      SUM(conversions_value) AS sum_conversions_value 
+      # roas = conversions_value/cost
     FROM 
-      `merchant_center_transfer.Products_*`
-    GROUP BY 1,2,3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+      `{bq_dataset}_bq.shopping_campaignproducttype` 
+    GROUP BY 1, 2
 )

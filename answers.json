@@ -23,7 +23,7 @@
   "run_wf": true,
   "clone_dashboard": true,
   "dashboard_id": "6e773f65-7612-45af-af37-e3cab6a9828b",
-  "dashboard_name": "pMax Best Practices Dashboard",
+  "dashboard_name": "pMaximizer",
   "dashboard_dataset": "pmax_ads_bq",
   "dashboard_datasources": {
     "poor_assets": "poor_assets_summary",

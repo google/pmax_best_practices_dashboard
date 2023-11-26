@@ -1,13 +1,13 @@
-# Deploying the pMax Best Practices Dashboard
+# Deploying the pMaximizer
 
 <walkthrough-metadata>
-  <meta name="title" content="Deploying the pMax Best Practices Dashboard" />
+  <meta name="title" content="Deploying the pMaximizer" />
   <meta name="description" content="A step by step guide on configuring cloud and deploying the dashboard." />
 </walkthrough-metadata>
 
 ## Introduction
 
-In this walkthrough, you'll generate OAuth credentials in preparation for the deployment of the pMax Best Practices Dashboard.
+In this walkthrough, you'll generate OAuth credentials in preparation for the deployment of the pMaximizer.
 
 <walkthrough-tutorial-difficulty difficulty="2"></walkthrough-tutorial-difficulty>
 <walkthrough-tutorial-duration duration="20"></walkthrough-tutorial-duration>
@@ -71,7 +71,7 @@ An authorization token is needed for the dashboard to communicate with Google Ad
     You can copy the name below and enter it as the application name.
 
     ```
-    pMax Best Practices Dashboard
+    pMaximizer
     ```
 
 1.  For the **Support email** dropdown menu, select the email address you want
@@ -160,7 +160,7 @@ sh setup-wfs.sh
 
 ## Conclusion
 
-Congratulations. You've set up the pMax Best Practices Dashboard!
+Congratulations. You've set up the pMaximizer!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 

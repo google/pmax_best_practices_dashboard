@@ -31,48 +31,8 @@ CAMPAIGN_PRODUCTGROUP_TABLE="shopping_campaignproducttype"
 LOWCLICKS_HIGHROAS_TABLE="shopping_lowclicks_highroas_producttype"
 WORK_RETAIL="work_retail"
 
-regions=(
-  'asia-east1'
-  'asia-east2'
-  'asia-northeast1'
-  'asia-northeast2'
-  'asia-south1'
-  'asia-southeast1'
-  'australia-southeast1'
-  'europe-central2'
-  'europe-west1'
-  'europe-west2'
-  'europe-west3'
-  'europe-west6'
-  'northamerica-northeast1'
-  'southamerica-east1'
-  'us-central1'
-  'us-east1'
-  'us-east4'
-  'us-west1'
-  'us-west2'
-  'us-west3'
-  'us-west4'
-)
 
-# Asking the user to select a region that will be used for the gaarf workflow and the MC datatransfer bigquery dataset.
-echo "Please select a region for Cloud services (workflows, functions, scheduler, bigquery):"
-
-select region in "${regions[@]}"; do
-  if [[ -n $region ]]; then
-    echo "You selected region: $region"
-    break
-  else
-    echo "Invalid selection. Please try again."
-  fi
-done
-
-raw_location=$(echo $region | cut -d'-' -f1)
-
-case $raw_location in
-    europe*) location="EU";;
-    *) location="US";;
-esac
+echo "Starting retail build process. "
 mkdir -p "$WORK_RETAIL"
 cp -r bq_queries "$WORK_RETAIL"
 cp -r google_ads_queries "$WORK_RETAIL"
@@ -103,8 +63,6 @@ node - <<EOF
              data.dashboard_datasources.campaign_product_group= '${CAMPAIGN_PRODUCTGROUP_TABLE}';
              data.dashboard_datasources.lowclicks_highroas_producttype = '${LOWCLICKS_HIGHROAS_TABLE}';
 
-             //Update Selected region to region chosen in the setup
-             data.gcp_region = '${region}'
             }
 
             fs.writeFileSync(ANSWERS_FILE_PATH, JSON.stringify(data, null, 4));

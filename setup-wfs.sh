@@ -17,43 +17,15 @@ set -e
 
 
 until [[ "$yn" == [YyNn] ]]; do
-    msg='Would you like to connect your Merchant Center accounts '
-    msg+='for product performance insights? (y/n): '
+    msg='Do you operate a retail business and wish to gain product insights with our retail-focused pMaximizer?'
+    msg+=' Please respond with 'y' for yes or 'n' for no: '
     read -p "$msg" yn
 done
 
 if [[ "$yn" == "y"  || "$yn" == "Y" ]]; then
-    until [[ "$mcid" == "skip" ]] || [[ "$mcid" =~ ^[0-9]+$ ]]; do
-        msg='Please provide your Merchant Center or MCA ID '
-        msg+='(e.g. 123456 or type 'skip' to skip this step): '
-        read -p "$msg" mcid
-    done
-
-    if [[ "$mcid" =~ ^[0-9]+$ ]]; then
-        source ./build-retail.sh
-        if bq ls -d "$DEVSHELL_PROJECT_ID":merchant_center_transfer &>/dev/null; then
-            # Delete the dataset if it exists
-            echo "Dataset merchant_center_transfer already exists. Deleting..."
-            bq rm -r -f -d "$DEVSHELL_PROJECT_ID":merchant_center_transfer
-        fi        
-        echo "creating a dataset in BigQuery named merchant_center_transfer..."
-        bq mk -d --data_location=$location merchant_center_transfer
-
-        echo "creating a Data Transfer for Merchant Center in BigQuery..."
-        bq_mk_params='{"merchant_id":"'$mcid'",'
-        bq_mk_params+='"export_products":"true"}'
-        bq mk --transfer_config \
-            --project_id="$DEVSHELL_PROJECT_ID" \
-            --data_source=merchant_center \
-            --display_name=merchant_center_transfer \
-            --target_dataset=merchant_center_transfer \
-            --params=$bq_mk_params
-    else
-        echo "skipping GMC setup..."
-    fi
-
+    source ./build-retail.sh
 else
-    echo "skipping GMC setup..."
+    echo "skipping Retail setup..."
 fi
 
 echo "initializing Google Ads data ETL Workflow..."
