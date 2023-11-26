@@ -1,13 +1,8 @@
-<<<<<<< Updated upstream
 # pMaximizer (Formally pMax Best Practices Dashboard)
 
 In this README, you'll find
-=======
-# pMaximizer (Formally pMaximizer (Formally pMax Best Practices Dashboard))
 
-In this README, you'll find:
->>>>>>> Stashed changes
-  
+
 *   [Problem Statement](#problem-statement)
 *   [Solution](#solution)
 *   [Installation](#installation)
@@ -37,14 +32,11 @@ Moreover, assets' performance is displayed and conveniently presented so adverti
 ## Deliverable (Implementation)
 
   
-A Looker Studio dashboard based on your Google Ads and Merchant Center data. After joining the group below, [click here](https://lookerstudio.google.com/c/reporting/755d5896-5c56-4f5a-9075-79249137c9ea/page/i5YsC) to see it in action.
+A Looker Studio dashboard based on your Google Ads data. After joining the group below, [click here](https://lookerstudio.google.com/c/reporting/755d5896-5c56-4f5a-9075-79249137c9ea/page/i5YsC) to see it in action.
 
 [![pMaximizer](https://services.google.com/fh/files/misc/pmaximizer-screenshots.png)](https://lookerstudio.google.com/c/reporting/755d5896-5c56-4f5a-9075-79249137c9ea/page/i5YsC)
-<<<<<<< Updated upstream
-=======
-* LookerStudio dashboard based on your Google Ads and Merchant Center data.
 
->>>>>>> Stashed changes
+* LookerStudio dashboard based on your Google Ad data.
   
 
 ## Prerequisites
