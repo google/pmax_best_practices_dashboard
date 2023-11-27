@@ -69,11 +69,11 @@ SELECT
   AGS.campaign_name,
   AGS.asset_group_id,
   AGS.asset_group_name,
-  CH.count_headlines,
-  CSH.count_short_headlines,
-  CD.count_descriptions,
-  CSD.count_short_descriptions,
-  CLH.count_long_headlines
+  COALESCE(CH.count_headlines,0) AS count_headlines,
+  COALESCE(CSH.count_short_headlines,0) AS count_short_headlines,
+  COALESCE(CD.count_descriptions,0) AS count_descriptions,
+  COALESCE(CSD.count_short_descriptions,0) AS count_short_descriptions,
+  COALESCE(CLH.count_long_headlines,0) AS count_long_headlines
 FROM `{bq_dataset}.assetgroupsummary` AS AGS
 LEFT JOIN count_headlines AS CH
   ON CH.campaign_id = AGS.campaign_id

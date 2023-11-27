@@ -21,7 +21,16 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.video_assets` AS (
     WHERE AGA.asset_type = 'YOUTUBE_VIDEO'
     AND A.video_id IS NOT NULL
     AND A.video_id != ''
-  )
+  ),
+  count_videos AS (
+    SELECT
+        campaign_id,
+        asset_group_id,
+        COUNT(*) AS count_videos
+    FROM `{bq_dataset}.assetgroupasset`
+    WHERE asset_type = 'YOUTUBE_VIDEO'
+    GROUP BY 1, 2
+ )
   SELECT
     AGS.account_id,
     AGS.account_name,
@@ -30,7 +39,9 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.video_assets` AS (
     AGS.asset_group_id,
     AGS.asset_group_name,
     AGS.ad_strength,
-    IF(AGV.asset_group_id IS NULL, "X", "Yes") AS is_video_uploaded
+    IF(AGV.asset_group_id IS NULL, "X", "Yes") AS is_video_uploaded,
+    COALESCE(CV.count_videos,0) AS count_videos
   FROM `{bq_dataset}.assetgroupsummary` AS AGS
   LEFT JOIN asset_group_with_videos AS AGV USING (asset_group_id)
+  LEFT JOIN count_videos CV USING (campaign_id,asset_group_id)
 )

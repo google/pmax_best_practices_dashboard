@@ -74,7 +74,7 @@ count_square_images AS (
     asset_group_id,
     COUNT(*) AS count_square
   FROM map_assets_account_campaign
-  WHERE asset_type = 'SQUARE_MARKETING_IMAGE'
+  WHERE asset_sub_type = 'SQUARE_MARKETING_IMAGE'
   GROUP BY 1, 2
 ),
 count_square_logos AS (
@@ -104,13 +104,13 @@ SELECT
   AGS.campaign_name,
   AGS.asset_group_id,
   AGS.asset_group_name,
-  CIA.count_images,
-  CL.count_logos,
-  CLA.count_landscape,
-  CSN.count_square,
-  CPA.count_portrait,
-  CSL.count_square_logos,
-  CRL.count_landscape_logos
+  COALESCE(CIA.count_images,0) AS count_images,
+  COALESCE(CL.count_logos,0) AS count_logos,
+  COALESCE(CLA.count_landscape,0) AS count_landscape,
+  COALESCE(CSN.count_square,0) AS count_square,
+  COALESCE(CPA.count_portrait,0) AS count_portrait,
+  COALESCE(CSL.count_square_logos,0) AS count_square_logos,
+  COALESCE(CRL.count_landscape_logos,0) AS count_landscape_logos,
 FROM `{bq_dataset}.assetgroupsummary` AS AGS
 LEFT JOIN count_image_assets AS CIA
   ON CIA.campaign_id = AGS.campaign_id
