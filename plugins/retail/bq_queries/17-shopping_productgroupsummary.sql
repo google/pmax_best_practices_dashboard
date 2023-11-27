@@ -20,8 +20,8 @@ AS (
       SUM(clicks) AS clicks,
       SUM(impressions) AS impressions,
       # ctr = clicks/impressions*100
-      SUM(cost) AS sum_cost,
-      SUM(conversions_value) AS sum_conversions_value 
+      SUM(sum_cost) AS sum_cost,
+      SUM(sum_conversions_value) AS sum_conversions_value 
       # roas = conversions_value/cost
     FROM 
       `{bq_dataset}_bq.shopping_campaignproducttype` 

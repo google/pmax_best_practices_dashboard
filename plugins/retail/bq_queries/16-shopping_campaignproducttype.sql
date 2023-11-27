@@ -29,8 +29,8 @@ CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_campaignproducttype` AS (
     SUM(clicks) AS clicks,
     SUM(conversions) AS conversions,
     SUM(impressions) AS impressions,
-    SUM(conversions_value) AS conversions_value,
-    SUM(cost/1e6) AS cost,
+    SUM(conversions_value) AS sum_conversions_value,
+    SUM(cost/1e6) AS sum_cost,
     SUM(ctr) AS ctr
   FROM 
     `{bq_dataset}.shoppingperformance_view`
