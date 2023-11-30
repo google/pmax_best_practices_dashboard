@@ -67,17 +67,22 @@ Click on the blue Deploy button and follow the instructions:
 
 ### Usage
 
-In order to update the code execute the following commands in your Cloud Shell:
+In order to update the code execute (copy to the cloud shell and press enter) the following commands in your Cloud Shell:
 
 ```
 cd pmax_best_practices_dashboard
-git pull
-./deploy-scripts.sh
 ```
 
-The following morning the data pipeline will kick in but if you would like it right away, execute:
+For **non-retail** clients, execute:
+
 ```
-./run-wf.sh
+./update_pmaximizer_non_retail.sh
+```
+
+For **retail** clients, execute:
+
+```
+./update_retail_pmaximizer.sh
 ```
 
 
