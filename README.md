@@ -148,13 +148,12 @@ If the deployment was unsuccessful please follow these steps to try and troubles
 	* If you find a mistake, edit it in place and be sure to save, and follow the next steps. If not, please refer to “How do I see logs from my deployment?” in the next section. 
 	* Click the “Open Terminal” icon: ![Open Terminal](https://services.google.com/fh/files/misc/pmaximizer-impl-img3.png)
 	* In the Cloud shell, copy and paste the green code, and press the Enter key when specified: 
-		* Non-Retailers: (Did not connect Merchant Center in deployment):
+		* Non-Retailers:
 			* ```cd pmax_best_practices_dashboard``` Press Enter
-			* ```./deploy-scripts.sh``` Press Enter
-			* ```./run-wf.sh``` Press Enter
+			* ```sh update_pmaximizer_non_retail.sh``` Press Enter
 		* Retailers 
 			* ```cd pmax_best_practices_dashboard``` Press Enter
-			* ```sh update_wf_for_retail.sh```  Press Enter 
+			* ```sh update_retail_pmaximizer.sh```  Press Enter 
 	* After the run finishes (may take 15-30 minutes) Check the dashboard URL to see if the deployment succeeded. (you can see instructions on how to find the dashboard URL in this document). 
 
 ### How do I see the logs from my deployment?
@@ -169,10 +168,10 @@ If the deployment was unsuccessful please follow these steps to try and troubles
 You can find the dashboard_url.txt file in the folder of the cloned repository or in your GCS bucket. Please see these instructions on how to access the URL through the cloud shell:
 * In The Google Cloud Platform, under the project you deployed too, Click the “Activate Cloud Shell” icon: ![Activate Cloud Shell”](https://services.google.com/fh/files/misc/pmaximizer-impl-img5.png)
 * In the Cloud shell, copy and paste the green code, and press the Enter key when specified: 
-	* Non-Retailers (Did not connect Merchant Center in deployment)
+	* Non-Retailers:
 		* ```cd pmax_best_practices_dashboard``` Press Enter
 		* ```cat dashboard_url.txt``` Press Enter
-	* Retailers
+	* Retailers:
 		* ```cd pmax_best_practices_dashboard/work_retail``` Press Enter
 		* ```cat dashboard_url.txt``` Press Enter
 

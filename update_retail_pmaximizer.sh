@@ -23,5 +23,11 @@ git pull
 
 ./build-retail.sh
 cd "$WORK_RETAIL"
-./deploy-queries.sh
+if [ -f "./deploy-queries.sh" ]; then
+    # If deploy-queries.sh exists, run it
+    ./deploy-queries.sh
+else
+    # If deploy-queries.sh does not exist, run deploy-scripts.sh
+    ./deploy-scripts.sh
+fi
 ./run-wf.sh
