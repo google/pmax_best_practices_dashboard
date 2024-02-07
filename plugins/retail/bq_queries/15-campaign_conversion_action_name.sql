@@ -17,6 +17,8 @@
 CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaign_conversion_action_name` AS (
 SELECT
 date, 
+account_id,
+account_name,
 campaign_id,
 campaign_name,
 conversion_action_name, 
@@ -27,5 +29,5 @@ sum(conversions) AS conversions,
 sum(view_through_conversions) AS view_thrupgh_conversions,
 sum(value_per_conversion) AS value_per_conversion
 FROM `{bq_dataset}.campaignconversionaction`
-GROUP BY 1, 2, 3, 4, 5
+GROUP BY 1, 2, 3, 4, 5, 6, 7
 )
