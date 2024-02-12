@@ -35,26 +35,13 @@ count_logos AS (
   WHERE asset_sub_type = 'LOGO'
   GROUP BY 1, 2
 ),
-map_assets_account_campaign AS (
-  SELECT
-    AGA.campaign_id,
-    AGA.asset_group_id,
-    A.image_width,
-    A.image_height,
-    A.asset_type,
-    AGA.asset_sub_type
-  FROM `{bq_dataset}.assetgroupasset` as AGA
-  LEFT JOIN `{bq_dataset}.asset` as A
-    ON AGA.account_id = A.account_id
-    AND AGA.asset_id = A.asset_id
-),
 count_landscape_assets AS (
   SELECT
     campaign_id,
     asset_group_id,
     COUNT(*) AS count_landscape
   FROM
-    map_assets_account_campaign
+    `{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type = 'MARKETING_IMAGE'
   GROUP BY 1, 2
 ),
@@ -64,7 +51,7 @@ count_portrait_assets AS (
     asset_group_id,
     COUNT(*) AS count_portrait
   FROM
-    map_assets_account_campaign
+    `{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type = 'PORTRAIT_MARKETING_IMAGE'
   GROUP BY 1, 2
 ),
@@ -73,7 +60,7 @@ count_square_images AS (
     campaign_id,
     asset_group_id,
     COUNT(*) AS count_square
-  FROM map_assets_account_campaign
+  FROM `{bq_dataset}.assetgroupasset`
   WHERE asset_sub_type = 'SQUARE_MARKETING_IMAGE'
   GROUP BY 1, 2
 ),
@@ -82,7 +69,7 @@ count_square_logos AS (
     campaign_id,
     asset_group_id,
     COUNT(*) AS count_square_logos
-  FROM map_assets_account_campaign
+  FROM `{bq_dataset}.assetgroupasset`
   WHERE image_width = image_height
     AND asset_sub_type = 'LOGO'
   GROUP BY 1, 2
@@ -92,7 +79,7 @@ count_landscape_logos AS (
     campaign_id,
     asset_group_id,
     COUNT(*) AS count_landscape_logos
-  FROM map_assets_account_campaign
+  FROM `{bq_dataset}.assetgroupasset`
   WHERE ROUND(SAFE_DIVIDE(image_width, image_height),2) = 4
   AND asset_sub_type = 'LOGO'
   GROUP BY 1, 2

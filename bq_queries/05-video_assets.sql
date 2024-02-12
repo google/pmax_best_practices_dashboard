@@ -12,15 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CREATE OR REPLACE TABLE `{bq_dataset}_bq.video_assets` AS (
+CREATE OR REPLACE TABLE `{bq_dataset}_bq.video_assets`
+AS (
   WITH asset_group_with_videos AS(
     SELECT DISTINCT AGA.asset_group_id
     FROM `{bq_dataset}.assetgroupasset` AS AGA
-    LEFT JOIN `{bq_dataset}.asset` A
-    USING (asset_id)
     WHERE AGA.asset_type = 'YOUTUBE_VIDEO'
-    AND A.video_id IS NOT NULL
-    AND A.video_id != ''
+    AND AGA.video_id IS NOT NULL
+    AND AGA.video_id != ''
   ),
   count_videos AS (
     SELECT
