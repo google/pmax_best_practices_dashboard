@@ -13,12 +13,13 @@
 # limitations under the License.
 
 CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaign_settings` AS
-WITH targets AS (
+WITH
+  TARGETS AS (
     SELECT
       C.date,
       C.account_id,
       C.campaign_id,
-      CASE 
+      CASE
         WHEN C.campaign_mcv_troas IS NOT NULL THEN C.campaign_mcv_troas
         WHEN C.campaign_troas IS NOT NULL THEN C.campaign_troas
         WHEN C.bidding_strategy_mcv_troas IS NOT NULL THEN C.bidding_strategy_mcv_troas
@@ -32,26 +33,26 @@ WITH targets AS (
     END AS tcpa
     FROM `{bq_dataset}.campaign_settings` C
   ),
-  assetgroupbestpractices AS (
+  ASSET_GROUP_BEST_PRACTICES AS (
     SELECT
-        CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
-        account_id,
-        campaign_id,
-        video_score,
-        text_score,
-        image_score,
+      CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
+      account_id,
+      campaign_id,
+      video_score,
+      text_score,
+      image_score,
     FROM `{bq_dataset}_bq.assetgroupbpscore_*`
     GROUP BY 1,2,3,4,5,6
-),
-campaignbestpractices AS (
+  ),
+  CAMPAIGN_BEST_PRACTICES AS (
     SELECT
-        CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
-        account_id,
-        campaign_id,
-        campaign_bp_score
+      CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
+      account_id,
+      campaign_id,
+      campaign_bp_score
     FROM `{bq_dataset}_bq.campaignbpscore_*`
     GROUP BY 1,2,3,4
-)
+  )
 SELECT
     C.date,
     C.account_id,
@@ -75,14 +76,18 @@ SELECT
     ABP.video_score,
     ABP.text_score,
     ABP.image_score,
-    CBP.campaign_bp_score
-FROM `{bq_dataset}.campaign_settings` C
-LEFT JOIN targets T USING(account_id, campaign_id, date)
-LEFT JOIN assetgroupbestpractices ABP 
+    CBP.campaign_bp_score,
+    OCID.ocid
+FROM `{bq_dataset}.campaign_settings` AS C
+LEFT JOIN TARGETS AS T
+  USING(account_id, campaign_id, date)
+LEFT JOIN ASSET_GROUP_BEST_PRACTICES AS ABP
   ON C.date = ABP.date_
   AND C.account_id = ABP.account_id
   AND C.campaign_id = ABP.campaign_id
-LEFT JOIN campaignbestpractices CBP 
+LEFT JOIN CAMPAIGN_BEST_PRACTICES AS CBP
   ON C.date = CBP.date_
   AND C.account_id = CBP.account_id
   AND C.campaign_id = CBP.campaign_id
+LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
+  ON OCID.account_id = C.account_id;

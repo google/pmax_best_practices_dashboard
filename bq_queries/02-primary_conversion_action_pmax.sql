@@ -12,24 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CREATE OR REPLACE TABLE `{bq_dataset}_bq.primary_conversion_action_pmax`
-AS
-  WITH conversion_account_level AS (
-    SELECT
+CREATE OR REPLACE TABLE `{bq_dataset}_bq.primary_conversion_action_pmax` AS
+WITH
+  CONVERSION_ACCOUNT_LEVEL AS (
+    SELECT DISTINCT
       account_id,
       campaign_id,
       campaign_type,
       conversion_name
     FROM `{bq_dataset}.conversion_category`
-    GROUP BY 1,2,3,4
-),
-conversion_split AS (
+  ),
+  CONVERSION_SPLIT AS (
     SELECT
       account_id,
       campaign_id,
       campaign_type,
       ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
-    FROM conversion_account_level
+    FROM CONVERSION_ACCOUNT_LEVEL
     GROUP BY 1,2,3
     UNION ALL
     SELECT
@@ -39,51 +38,60 @@ conversion_split AS (
       custom_conversion_goal_name AS conversion_name
     FROM `{bq_dataset}.conversion_custom`
     JOIN `{bq_dataset}.custom_goal_names` USING (account_id,custom_conversion_goal_id)
-),
-conversion_split_grouped_w_custom AS (
-  SELECT
+  ),
+  CONVERSION_SPLIT_GROUPED_W_CUSTOM AS (
+    SELECT
       account_id,
       campaign_id,
       campaign_type,
       ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
-  FROM conversion_split
-  GROUP BY 1,2,3
-),
-convActionFreq AS (
+    FROM CONVERSION_SPLIT
+    GROUP BY 1,2,3
+  ),
+  CONVERSION_ACTION_FREQUENCY AS (
     SELECT
       account_id,
       campaign_id,
       campaign_type,
       conversion_name,
-      RANK() OVER (PARTITION BY account_id, campaign_type ORDER BY COUNT(DISTINCT campaign_id) DESC) AS row_num
-    FROM conversion_split_grouped_w_custom
+      RANK() OVER (PARTITION BY account_id, campaign_type
+        ORDER BY COUNT(DISTINCT campaign_id) DESC) AS row_num
+    FROM CONVERSION_SPLIT_GROUPED_W_CUSTOM
     WHERE campaign_type = "PERFORMANCE_MAX"
-    GROUP BY account_id, conversion_name, campaign_type, campaign_id
-),
-convActionFreq_grouped AS (
-  SELECT
+    GROUP BY
+      account_id,
+      conversion_name,
+      campaign_type,
+      campaign_id
+  ),
+  CONVERSION_ACTION_FREQUENCY_GROUPED AS (
+    SELECT
       account_id,
       campaign_id,
       campaign_type,
       row_num,
       ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
-  FROM convActionFreq
-  GROUP BY 1,2,3,4
-),
-most_used_conversions AS (
-  SELECT
-    cs.account_id,
-    cs.campaign_id,
-    ARRAY_TO_STRING(ARRAY_AGG(cf.conversion_name),",") AS conversion_name
-  FROM conversion_split_grouped_w_custom cs
-  JOIN convActionFreq_grouped cf USING (account_id, campaign_id)
-  WHERE row_num = 1
-  AND cs.campaign_type = "PERFORMANCE_MAX"
-  GROUP BY 1,2
-)
-SELECT
+    FROM CONVERSION_ACTION_FREQUENCY
+    GROUP BY
+      account_id,
+      campaign_id,
+      campaign_type,
+      row_num
+  ),
+  MOST_USED_CONVERSIONS AS (
+    SELECT
+      CS.account_id,
+      CS.campaign_id,
+      ARRAY_TO_STRING(ARRAY_AGG(CF.conversion_name),",") AS conversion_name
+    FROM CONVERSION_SPLIT_GROUPED_W_CUSTOM AS CS
+    JOIN CONVERSION_ACTION_FREQUENCY_GROUPED AS CF
+      USING (account_id, campaign_id)
+    WHERE row_num = 1
+      AND CS.campaign_type = "PERFORMANCE_MAX"
+    GROUP BY 1,2
+  )
+SELECT DISTINCT
   account_id,
   campaign_id,
   conversion_name
-FROM most_used_conversions
-GROUP BY 1,2,3
+FROM MOST_USED_CONVERSIONS

@@ -26,9 +26,14 @@ SELECT
   AGA.text_asset_text,
   AGS.asset_group_status,
   COALESCE(AGA.image_url,CONCAT('https://www.youtube.com/watch?v=',AGA.video_id)) AS image_video,
-  COALESCE(AGA.image_url,CONCAT('https://i.ytimg.com/vi/', CONCAT(AGA.video_id, '/hqdefault.jpg'))) AS image_video_url
-FROM `{bq_dataset}.assetgroupasset` AGA
-JOIN `{bq_dataset}.assetgroupsummary` AGS USING(asset_group_id)
+  COALESCE(AGA.image_url,CONCAT('https://i.ytimg.com/vi/', CONCAT(AGA.video_id, '/hqdefault.jpg'))) AS image_video_url,
+  OCID.ocid
+FROM `{bq_dataset}.assetgroupasset` AS AGA
+  JOIN `{bq_dataset}.assetgroupsummary` AS AGS
+    USING(asset_group_id)
+  LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
+    ON OCID.account_id = AGA.account_id
 WHERE AGA.asset_performance NOT IN ('PENDING','UNKNOWN')
-AND AGA.campaign_id IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`)
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13)
+  AND AGA.campaign_id
+    IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`)
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14);
