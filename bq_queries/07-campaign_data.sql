@@ -56,31 +56,56 @@ WITH
     GROUP BY 
       campaign_id
   ),
-  SITELINKS_DATA AS (
+  CAMPIAGN_SITELINKS_DATA AS (
     SELECT
-      CA.account_id,
-      CA.account_name,
-      CA.campaign_id,
-      CA.campaign_name,
-      COUNT(*) AS count_sitelinks
-    FROM `{bq_dataset}.campaignasset` AS CA
-    WHERE CA.asset_type='SITELINK'
+      account_id,
+      account_name,
+      campaign_id,
+      campaign_name,
+      COUNT(*) AS campaign_sitelinks,
+    FROM `{bq_dataset}.campaignasset`
+    WHERE asset_type = 'SITELINK'
     GROUP BY 1, 2, 3, 4
   ),
-  CALLOUTS_DATA AS (
+  ACCOUNT_SITELINKS_DATA AS (
     SELECT
-      CA.campaign_id,
-      COUNT(*) AS count_callouts
-    FROM `{bq_dataset}.campaignasset` AS CA
-    WHERE CA.asset_type='CALLOUT'
+      account_id,
+      account_name,
+      COUNT(*) AS account_sitelinks,
+    FROM `{bq_dataset}.customerasset`
+    WHERE asset_type = 'SITELINK'
+    GROUP BY 1, 2
+  ),
+  CAMPAIGN_CALLOUTS_DATA AS (
+    SELECT
+      campaign_id,
+      COUNT(*) AS campaign_callouts
+    FROM `{bq_dataset}.campaignasset`
+    WHERE asset_type = 'CALLOUT'
     GROUP BY 1
   ),
-  STRUCTURED_SNIPPETS_DATA AS (
+  ACCOUNT_CALLOUTS_DATA AS (
     SELECT
-      CA.campaign_id,
-      COUNT(*) AS count_structsnippets
-    FROM `{bq_dataset}.campaignasset` AS CA
-    WHERE CA.asset_type='STRUCTURED_SNIPPET'
+      account_id,
+      COUNT(*) AS account_callouts
+    FROM `{bq_dataset}.customerasset`
+    WHERE asset_type='CALLOUT'
+    GROUP BY 1
+  ),
+  CAMPAIGN_STRUCTURED_SNIPPETS_DATA AS (
+    SELECT
+      campaign_id,
+      COUNT(*) AS campaign_structsnippets
+    FROM `{bq_dataset}.campaignasset`
+    WHERE asset_type = 'STRUCTURED_SNIPPET'
+    GROUP BY 1
+  ),
+  ACCOUNT_STRUCTURED_SNIPPETS_DATA AS (
+    SELECT
+      account_id,
+      COUNT(*) AS account_structsnippets
+    FROM `{bq_dataset}.customerasset`
+    WHERE asset_type = 'STRUCTURED_SNIPPET'
     GROUP BY 1
   )
 SELECT
@@ -113,18 +138,22 @@ SELECT
   IF (C.negative_geo_target_type != 'PRESENCE_OR_INTEREST', "X", "Yes") as negative_geo_target_type_configured_good,
   IF (C.positive_geo_target_type != 'PRESENCE_OR_INTEREST', "X", "Yes") as positive_geo_target_type_configured_good,
   CASE
-    WHEN SD.count_sitelinks IS NOT NULL
-      THEN IF (SD.count_sitelinks > 4, 0, 4 - SD.count_sitelinks) 
-    ELSE 4
+    WHEN (IF(SD.campaign_sitelinks IS NULL, 0, SD.campaign_sitelinks) 
+    + IF(ASD.account_sitelinks IS NULL, 0, ASD.account_sitelinks)) >= 4
+      THEN 0
+    ELSE 4 - (IF(SD.campaign_sitelinks IS NULL, 0, SD.campaign_sitelinks) 
+    + IF(ASD.account_sitelinks IS NULL, 0, ASD.account_sitelinks))
   END AS missing_sitelinks,
   CASE
-    WHEN CD.count_callouts IS NOT NULL
-      THEN IF (CD.count_callouts >= 1, 0, 1)
+     WHEN (IF(CD.campaign_callouts IS NULL, 0, CD.campaign_callouts) 
+     + IF(ACD.account_callouts IS NULL, 0, ACD.account_callouts)) >= 1
+      THEN 0
     ELSE 1
   END AS missing_callouts,
   CASE
-    WHEN SSD.count_structsnippets IS NOT NULL
-      THEN IF (SSD.count_structsnippets >= 1, 0, 1)
+     WHEN (IF(SSD.campaign_structsnippets IS NULL, 0, SSD.campaign_structsnippets) 
+     + IF(ASSD.account_structsnippets IS NULL, 0, ASSD.account_structsnippets)) >= 1
+      THEN 0
     ELSE 1
   END AS missing_structured_snippets,
   CASE
@@ -160,11 +189,17 @@ FROM `{bq_dataset}.campaign_settings` C
     ON C.campaign_id = AGC.campaign_id
   LEFT JOIN AUDIENCE_SIGNALS_COUNT AS ASCC
     ON C.campaign_id = ASCC.campaign_id
-  LEFT JOIN SITELINKS_DATA AS SD
+  LEFT JOIN CAMPIAGN_SITELINKS_DATA AS SD
     ON C.campaign_id = SD.campaign_id
-  LEFT JOIN CALLOUTS_DATA AS CD
+  LEFT JOIN ACCOUNT_SITELINKS_DATA AS ASD
+    ON C.account_id = ASD.account_id
+  LEFT JOIN CAMPAIGN_CALLOUTS_DATA AS CD
     ON C.campaign_id = CD.campaign_id
-  LEFT JOIN STRUCTURED_SNIPPETS_DATA AS SSD
+  LEFT JOIN ACCOUNT_CALLOUTS_DATA AS ACD
+    ON C.account_id = ACD.account_id
+  LEFT JOIN CAMPAIGN_STRUCTURED_SNIPPETS_DATA AS SSD
     ON C.campaign_id = SSD.campaign_id
+  LEFT JOIN ACCOUNT_STRUCTURED_SNIPPETS_DATA AS ASSD
+    ON C.account_id = ASSD.account_id
   LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
     ON OCID.account_id = C.account_id;
