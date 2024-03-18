@@ -15,6 +15,8 @@
 CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_campaignproducttype` AS (
   SELECT
     date,
+    account_id,
+    account_name,
     campaign_name,
     campaign_id,
     CASE 
@@ -34,5 +36,5 @@ CREATE OR  REPLACE TABLE `{bq_dataset}_bq.shopping_campaignproducttype` AS (
     SUM(ctr) AS ctr
   FROM 
     `{bq_dataset}.shoppingperformance_view`
-  GROUP BY 1,2,3,4
+  GROUP BY 1,2,3,4,5,6
 )

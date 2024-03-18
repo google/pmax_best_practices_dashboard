@@ -13,6 +13,8 @@
 # limitations under the License.
 
 SELECT
+    customer.descriptive_name as account_name,
+    customer.id as account_id,
     campaign.advertising_channel_type,
     campaign.id AS campaign_id,
     campaign.name AS campaign_name,
