@@ -32,7 +32,7 @@ FROM `{bq_dataset}.assetgroupasset` AS AGA
   JOIN `{bq_dataset}.assetgroupsummary` AS AGS
     USING(asset_group_id)
   LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
-    ON OCID.account_id = AGA.account_id
+    ON OCID.customer_id = AGA.account_id
 WHERE AGA.asset_performance NOT IN ('PENDING','UNKNOWN')
   AND AGA.campaign_id
     IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`)

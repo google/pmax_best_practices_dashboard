@@ -90,4 +90,4 @@ LEFT JOIN CAMPAIGN_BEST_PRACTICES AS CBP
   AND C.account_id = CBP.account_id
   AND C.campaign_id = CBP.campaign_id
 LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
-  ON OCID.account_id = C.account_id;
+  ON OCID.customer_id = C.account_id;

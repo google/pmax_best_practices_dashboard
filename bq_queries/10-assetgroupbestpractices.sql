@@ -106,5 +106,5 @@ FROM `{bq_dataset}.assetgroupsummary` AS AGS
    ON AGS.campaign_id = ASA.campaign_id
    AND AGS.asset_group_id = ASA.asset_group_id
   LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
-   ON OCID.account_id = AGS.account_id
+   ON OCID.customer_id = AGS.account_id
 WHERE AGS.campaign_id IN (SELECT campaign_id FROM `{bq_dataset}.campaign_settings`);

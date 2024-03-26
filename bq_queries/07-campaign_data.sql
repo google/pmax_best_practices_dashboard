@@ -202,4 +202,4 @@ FROM `{bq_dataset}.campaign_settings` C
   LEFT JOIN ACCOUNT_STRUCTURED_SNIPPETS_DATA AS ASSD
     ON C.account_id = ASSD.account_id
   LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
-    ON OCID.account_id = C.account_id;
+    ON OCID.customer_id = C.account_id;
