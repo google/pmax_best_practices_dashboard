@@ -13,6 +13,7 @@
 # limitations under the License.
 
 SELECT
+  segments.date AS date,
   asset_group.id AS asset_group_id,
   asset_group.name AS asset_group_name,
   asset_group.status AS asset_group_status,
@@ -20,8 +21,22 @@ SELECT
   campaign.name AS campaign_name,
   customer.id AS account_id,
   customer.descriptive_name AS account_name,
-  asset_group.ad_strength as ad_strength
-FROM asset_group
-WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
-AND asset_group.status = 'ENABLED'
-AND campaign.status = 'ENABLED'
+  asset_group.ad_strength AS ad_strength,
+  metrics.clicks AS clicks,
+  metrics.conversions AS conversions,
+  metrics.all_conversions AS all_conversions,
+  metrics.cost_micros As cost,
+  metrics.conversions_value AS conversions_value,
+  metrics.impressions AS impressions,
+  metrics.ctr AS ctr,
+  metrics.value_per_all_conversions AS value_per_all_conversions,
+  metrics.value_per_conversion AS value_per_conversion,
+  metrics.all_conversions_value AS all_conversions_value,
+FROM
+  asset_group
+WHERE
+  campaign.advertising_channel_type = 'PERFORMANCE_MAX'
+  AND asset_group.status = 'ENABLED'
+  AND campaign.status = 'ENABLED'
+  AND segments.date >= '{start_date}'
+  AND segments.date <= '{end_date}'
