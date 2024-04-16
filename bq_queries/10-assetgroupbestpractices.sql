@@ -71,6 +71,7 @@ WITH
       asset_group_id
   )
 SELECT
+  AGS.date,
   AGS.account_id,
   AGS.account_name,
   AGS.campaign_id,
