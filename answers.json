@@ -32,6 +32,7 @@
     "asset_group_bp": "assetgroupbestpractices",
     "asset_performance_snapshots": "assetssnapshots_*",
     "assets_performance": "summaryassets",
-    "scores": "campaign_scores_union"
+    "scores": "campaign_scores_union",
+    "asset_group_performance": "assetgroup_performance"
   }
 }
