@@ -23,6 +23,10 @@ git pull
 
 ./build-retail.sh
 cd "$WORK_RETAIL"
+
+# This will trigger an update of gaarf, our underlying ETL library
+./deploy-wf.sh
+
 if [ -f "./deploy-queries.sh" ]; then
     # If deploy-queries.sh exists, run it
     ./deploy-queries.sh
