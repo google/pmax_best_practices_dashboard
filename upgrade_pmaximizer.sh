@@ -17,7 +17,15 @@
 #This is a script to update code from git and re-run all queries for retail-pmax users. 
 set -e
 
+WORK_RETAIL="work_retail"
+
 git pull
+
+#Check if the user deployed the retail version of pMaximizer. If so, work from there.
+if [ -d "$WORK_RETAIL" ]; then
+    ./build-retail.sh
+    cd "$WORK_RETAIL"
+fi
 
 # This will trigger an update of gaarf, our underlying ETL library
 ./deploy-wf.sh
