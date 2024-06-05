@@ -45,29 +45,30 @@ A Looker Studio dashboard based on your Google Ads data. After joining the group
 
 ### Installation
 
-Click on the blue Deploy button and follow the instructions:
+Click [this link](https://console.cloud.google.com/?cloudshell=true&cloudshell_git_repo=https://github.com/google/pmax_best_practices_dashboard&cloudshell_tutorial=walkthrough.md) to be redirected to a step-by-step Google Cloud tutorial on deploying pMaximizer.
 
-[![Click to deploy pMaximizer](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCDIyJjIDWlJHd_x6RAaKczT5_9yc_IC3voZoSUgPwZ9Qn2gQRI3-e_Ra9UR2zEgMVMBM&usqp=CAU)](https://console.cloud.google.com/?cloudshell=true&cloudshell_git_repo=https://github.com/google/pmax_best_practices_dashboard&cloudshell_tutorial=walkthrough.md)
+### Update to the newest version
 
-### Usage
+To update the code and produce a new updated dashboard link, follow these steps. (If you wish to keep the same dashboard as you previously produced, you can, but in that case, only backend updates will be implemented.)
 
-In order to update the code execute (copy to the cloud shell and press enter) the following commands in your Cloud Shell:
+1. Enter the [Google Cloud Platform (GCP)](https://console.cloud.google.com/).
+2. Make sure you’re in the project where you deployed the pMaximizer.
+3. Activate the Cloud Shell by clicking on the "Activate Cloud Shell" icon on the upper right side of the screen: ![Activate Cloud Shell”](https://services.google.com/fh/files/misc/pmaximizer-impl-img5.png)
+4. Execute (copy to the Cloud Shell and press Enter) the following commands in your Cloud Shell:
 
 ```
 cd pmax_best_practices_dashboard
 ```
 
-For **non-retail** clients, execute:
-
 ```
-./update_pmaximizer_non_retail.sh
+git pull
 ```
 
-For **retail** clients, execute:
+```
+sh upgrade_pmaximizer.sh
+```
 
-```
-./update_retail_pmaximizer.sh
-```
+Follow the link at the end of the deployment process to see access the upgraded dashboard, or use your previous link if you wish to only update the backend of the dashboard.
 
 ## Architecture
 
@@ -127,12 +128,8 @@ If the deployment was unsuccessful please follow these steps to try and troubles
    - If you find a mistake, edit it in place and be sure to save, and follow the next steps. If not, please refer to “How do I see logs from my deployment?” in the next section.
    - Click the “Open Terminal” icon: ![Open Terminal](https://services.google.com/fh/files/misc/pmaximizer-impl-img3.png)
    - In the Cloud shell, copy and paste the green code, and press the Enter key when specified:
-     - Non-Retailers:
-       - `cd pmax_best_practices_dashboard` Press Enter
-       - `sh update_pmaximizer_non_retail.sh` Press Enter
-     - Retailers
-       - `cd pmax_best_practices_dashboard` Press Enter
-       - `sh update_retail_pmaximizer.sh` Press Enter
+     - `cd pmax_best_practices_dashboard` Press Enter
+     - `sh upgrade_pmaximizer.sh` Press Enter
    - After the run finishes (may take 15-30 minutes) Check the dashboard URL to see if the deployment succeeded. (you can see instructions on how to find the dashboard URL in this document).
 
 ### How do I see the logs from my deployment?
@@ -223,7 +220,34 @@ to a value that covers the dates where the campaigns were active. By default it 
 
 You can use an existing Project if you want to. However, please remember that the best practice for clients is to create a new project dedicated to this solution (or any new solution).
 
----
+### How can I modify the dashboard from a non-retail version to a retail version?
+
+1. Enter the [Google Cloud Platform (GCP)](https://console.cloud.google.com/).
+2. Make sure you’re in the project you deployed the pMaximizer to.
+3. Activate the Cloud Shell by clicking on the "Activate Cloud Shell" icon on the upper right side of the screen: ![Activate Cloud Shell”](https://services.google.com/fh/files/misc/pmaximizer-impl-img5.png)
+4. Execute (copy to the cloud shell and press enter) the following commands in your Cloud Shell:
+
+```
+cd pmax_best_practices_dashboard
+```
+
+```
+git pull
+```
+
+```
+sh non_retail_to_retail_upgrade.sh
+```
+
+Follow the link at the end of the deployment process to access your new retail pMaximizer.
+
+### After finishing an upgrade, some tables are missing, and when looking at the table properties I see an "Invalid dimension" error for two or three of the top columns (see screenshot):
+
+![column link error](https://services.google.com/fh/files/misc/ocid_bug.png)
+
+This could be caused by newly introduced columns that allow deep linking into the respective accounts, campaigns, or asset groups. If you do not want deep linking, you can simply replace the broken (red) columns of your tables with account_name, campaign_name, and asset_group_name respectively.
+
+## If you do want the deep linking feature, see full instructions on how to fix the issue in [this document](https://docs.google.com/document/d/1bXSV6Et0xMD6XfS3y10qpdsbivrM_Y5-o71LMK8sbTI/edit?resourcekey=0-9MSOa9d1tYpWMnh2Zmr4Tg&tab=t.0) (you need to be part of the [Google group](https://groups.google.com/g/pmax-dashboard-template-readers/) to access the document).
 
 **If you can’t find an answer for your question/a solution to your problem here, please reach out to pmax_bpdash@google.com.**
 
