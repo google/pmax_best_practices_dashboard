@@ -39,7 +39,9 @@ text_data AS (
     count_long_headlines,
     count_short_descriptions,
     count_short_headlines,
-    (IF(count_descriptions >= 5,1,0)+IF(count_headlines >= 15,1,0)+IF(count_long_headlines >= 1,1,0)+IF(count_short_descriptions >= 1,1,0)+IF(count_short_headlines >= 1,1,0))/5 AS text_score
+    (IF(count_descriptions >= 4, 1, 0) + 
+     IF(count_headlines >= 11, 1, 0) + 
+     IF(count_long_headlines >= 2, 1, 0)) / 3 AS text_score
   FROM `{bq_dataset}_bq.text_assets`
 ),
 image_data AS (
@@ -56,7 +58,12 @@ image_data AS (
     count_landscape_logos,
     count_square,
     count_square_logos,
-    (IF(count_landscape >= 5,1,0)+IF(count_square >= 5,1,0)+IF(count_portrait >= 5,1,0)+IF(count_landscape_logos >= 1,1,0)+IF(count_square_logos >= 1,1,0))/5 AS image_score
+    (IF(count_landscape >= 4, 1, 0) + 
+     IF(count_square >= 4, 1, 0) + 
+     IF(count_portrait >= 4, 1, 0) + 
+     IF(count_landscape_logos >= 1, 1, 0) + 
+     IF(count_square_logos >= 1, 1, 0)) / 5 AS image_score
+
   FROM `{bq_dataset}_bq.image_assets`
 ),
 audience_signals_count AS (
@@ -82,20 +89,22 @@ SELECT
     V.video_score,
     T.text_score,
     I.image_score,
-    IF(count_descriptions < 5, 5 - count_descriptions, 0) AS missing_descriptions,
-    IF(count_headlines < 15, 15 - count_headlines, 0) AS missing_headlines,
-    IF(count_long_headlines < 1, 1 - count_long_headlines, 0) AS missing_long_headlines,
-    IF(count_short_headlines < 1, 1 - count_short_headlines, 0) AS missing_short_headlines,
-    IF(count_short_descriptions < 1, 1 - count_short_descriptions, 0) AS missing_short_descriptions,
-    IF(count_descriptions - count_short_descriptions < 4, 4 - (count_descriptions - count_short_descriptions), 0) AS missing_long_descriptions,
-    IF((count_landscape + count_square + count_portrait) < 20, 20 - (count_landscape + count_square + count_portrait), 0) AS missing_images,
-    IF(count_landscape < 5, 5 - count_landscape, 0) AS missing_landscape,
-    IF(count_square < 5, 5 - count_square, 0) AS missing_square,
-    IF(count_portrait < 5, 5 - count_portrait, 0) AS missing_portrait,
+    IF(count_descriptions < 4, 4 - count_descriptions, 0) AS missing_descriptions,
+    IF(count_descriptions < 5, 5 - count_descriptions, 0) AS missing_descriptions_max,
+    IF(count_headlines < 11, 11 - count_headlines, 0) AS missing_headlines,
+    IF(count_headlines < 15, 15 - count_headlines, 0) AS missing_headlines_max,
+    IF(count_long_headlines < 2, 2 - count_long_headlines, 0) AS missing_long_headlines,
+    IF(count_long_headlines < 5, 5 - count_long_headlines, 0) AS missing_long_headlines_max,
+    IF((count_landscape + count_square + count_portrait) < 12, 12 - (count_landscape + count_square + count_portrait), 0) AS missing_images,
+    IF((count_landscape + count_square + count_portrait) < 20, 20 - (count_landscape + count_square + count_portrait), 0) AS missing_images_max,
+    IF(count_landscape < 4, 4 - count_landscape, 0) AS missing_landscape,
+    IF(count_square < 4, 4 - count_square, 0) AS missing_square,
+    IF(count_portrait < 2, 2 - count_portrait, 0) AS missing_portrait,
     IF(count_logos < 2, 2 - count_logos, 0) AS missing_logos,
     IF(count_square_logos = 0, 1, 0) AS missing_square_logos,
     IF(count_landscape_logos = 0, 1, 0) AS missing_landscape_logos,
     IF(count_videos < 3, 3 - count_videos, 0) AS missing_video,
+    IF(count_videos < 5, 5 - count_videos, 0) AS missing_video_max,
     IF(ASA.number_of_audience_signals IS NOT NULL,"Yes","X") AS audience_signals
 FROM `{bq_dataset}.assetgroupsummary` AGS
 JOIN video_data V USING (account_id, campaign_id, asset_group_id)
