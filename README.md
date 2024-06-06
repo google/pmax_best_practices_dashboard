@@ -47,7 +47,7 @@ A Looker Studio dashboard based on your Google Ads data. After joining the group
 
 Click [this link](https://console.cloud.google.com/?cloudshell=true&cloudshell_git_repo=https://github.com/google/pmax_best_practices_dashboard&cloudshell_tutorial=walkthrough.md) to be redirected to a step-by-step Google Cloud tutorial on deploying pMaximizer.
 
-### Update to the newest version
+### Update to the Latest Version
 
 To update the code and produce a new updated dashboard link, follow these steps. (If you wish to keep the same dashboard as you previously produced, you can, but in that case, only backend updates will be implemented.)
 
