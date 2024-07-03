@@ -1,0 +1,9 @@
+{
+  "name": "pmaximizer",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lsd-cloner": "^1.0.3"
+  }
+}
