@@ -2,6 +2,7 @@
   "use_current_project": true,
   "name": "pmax",
   "gcs_bucket": "",
+  "service_account": "",
   "path_to_ads_queries": "google_ads_queries",
   "path_to_bq_queries": "bq_queries",
   "custom_ids_query_path": "get-accounts.sql",
