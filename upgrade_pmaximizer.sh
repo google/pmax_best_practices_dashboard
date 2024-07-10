@@ -41,5 +41,5 @@ fi
 
 echo "generating a new up-to-date copy of our main template..."
 # This will use our answers.json to generate a new template
-npm i -g lsd-cloner
-lsd-cloner --answers=answers.json
+npm install
+npx lsd-cloner --answers=answers.json
