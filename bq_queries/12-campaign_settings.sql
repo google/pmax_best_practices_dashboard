@@ -38,11 +38,11 @@ WITH
       CAST(DATE(TIMESTAMP(CONCAT(SUBSTR(_TABLE_SUFFIX,0,4),'-',SUBSTR(_TABLE_SUFFIX,5,2),'-',SUBSTR(_TABLE_SUFFIX,7))))-1 AS STRING) AS date_,
       account_id,
       campaign_id,
-      video_score,
-      text_score,
-      image_score,
+      ROUND(AVG(video_score), 2) AS video_score,
+      ROUND(AVG(text_score), 2) AS text_score,
+      ROUND(AVG(image_score), 2) AS image_score
     FROM `{bq_dataset}_bq.assetgroupbpscore_*`
-    GROUP BY 1,2,3,4,5,6
+    GROUP BY 1,2,3
   ),
   CAMPAIGN_BEST_PRACTICES AS (
     SELECT

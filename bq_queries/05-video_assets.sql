@@ -30,7 +30,7 @@ AS (
     WHERE asset_type = 'YOUTUBE_VIDEO'
     GROUP BY 1, 2
  )
-  SELECT
+  SELECT DISTINCT
     AGS.account_id,
     AGS.account_name,
     AGS.campaign_id,

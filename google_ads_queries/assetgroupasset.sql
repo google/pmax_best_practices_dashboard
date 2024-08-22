@@ -15,6 +15,7 @@
 SELECT
   asset_group.id AS asset_group_id,
   asset_group.name AS asset_group_name,
+  asset_group.status AS asset_group_status,
   campaign.id AS campaign_id,
   campaign.name AS campaign_name,
   asset.id AS asset_id,
@@ -32,4 +33,6 @@ SELECT
   asset.youtube_video_asset.youtube_video_title AS video_title
 FROM asset_group_asset
 WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
+AND campaign.status = 'ENABLED'
+AND asset_group.status = 'ENABLED'
 AND asset_group_asset.status = 'ENABLED'

@@ -84,7 +84,7 @@ count_landscape_logos AS (
   AND asset_sub_type = 'LOGO'
   GROUP BY 1, 2
 )
-SELECT 
+SELECT DISTINCT
   AGS.account_id,
   AGS.account_name,
   AGS.campaign_id,

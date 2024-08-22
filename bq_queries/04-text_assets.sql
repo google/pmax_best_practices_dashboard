@@ -60,7 +60,7 @@ count_short_descriptions AS (
     AND LENGTH(AGA.text_asset_text) <= 60
   GROUP BY 1, 2
 )
-SELECT
+SELECT DISTINCT
   AGS.account_id,
   AGS.account_name,
   AGS.campaign_id,
