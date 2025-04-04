@@ -26,7 +26,7 @@ WITH count_image_assets AS (
   GROUP BY 1, 2
 ),
 count_logos AS (
-  SELECT 
+  SELECT
     campaign_id,
     asset_group_id,
     COUNT(*) AS count_logos
@@ -84,11 +84,12 @@ count_landscape_logos AS (
   AND asset_sub_type = 'LOGO'
   GROUP BY 1, 2
 )
-SELECT DISTINCT
+SELECT
   AGS.account_id,
   AGS.account_name,
   AGS.campaign_id,
   AGS.campaign_name,
+  AGS.campaign_status,
   AGS.asset_group_id,
   AGS.asset_group_name,
   COALESCE(CIA.count_images,0) AS count_images,
@@ -120,4 +121,4 @@ LEFT JOIN count_square_logos AS CSL
 LEFT JOIN count_landscape_logos AS CRL
   ON CRL.campaign_id = AGS.campaign_id
   AND CRL.asset_group_id = AGS.asset_group_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+GROUP BY ALL

@@ -14,7 +14,21 @@
 
 CREATE OR REPLACE TABLE `{bq_dataset}_bq.poor_assets_summary` AS
     SELECT
+        ABP.campaign_status,
         COUNT(distinct ABP.campaign_id) AS num_campaigns,
         COUNT(distinct ABP.asset_group_id) AS num_asset_groups
     FROM `{bq_dataset}_bq.assetgroupbestpractices` ABP
     WHERE ad_strength = 'POOR'
+    GROUP BY ALL
+  -- Adding dummy rows to avoid errors when filtering on campaign status
+  UNION ALL
+    SELECT
+      'ENABLED' AS campaign_status,
+      0 AS num_campaigns,
+      0 AS num_asset_groups
+  UNION ALL
+    SELECT
+      'PAUSED' AS campaign_status,
+      0 AS num_campaigns,
+      0 AS num_asset_groups
+

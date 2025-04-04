@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SELECT 
+SELECT
     asset_group_signal.audience.audience AS audience_signals,
     campaign.id AS campaign_id,
     asset_group.id AS asset_group_id
-FROM 
-    asset_group_signal 
-WHERE 
+FROM
+    asset_group_signal
+WHERE
     asset_group_signal.audience.audience IS NOT NULL

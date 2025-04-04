@@ -57,7 +57,7 @@ CONVERSION_ACTION_FREQUENCY AS (
     RANK() OVER (PARTITION BY account_id, campaign_type
       ORDER BY COUNT(DISTINCT campaign_id) DESC) AS row_num
   FROM CONVERSION_SPLIT_GROUPED_W_CUSTOM
-  WHERE campaign_type = "SEARCH"
+  WHERE campaign_type = 'SEARCH'
   GROUP BY
     account_id,
     conversion_name,
@@ -80,7 +80,7 @@ MOST_USED_CONVERSIONS AS (
   JOIN CONVERSION_ACTION_FREQUENCY_GROUPED CF
     USING (account_id)
   WHERE row_num = 1
-  AND CS.campaign_type = "SEARCH"
+  AND CS.campaign_type = 'SEARCH'
 )
 SELECT DISTINCT
   account_id,

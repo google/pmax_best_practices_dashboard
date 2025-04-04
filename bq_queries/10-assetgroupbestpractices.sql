@@ -40,8 +40,8 @@ WITH
       count_long_headlines,
       count_short_descriptions,
       count_short_headlines,
-      (IF(count_descriptions >= 4, 1, 0) + 
-       IF(count_headlines >= 11, 1, 0) + 
+      (IF(count_descriptions >= 4, 1, 0) +
+       IF(count_headlines >= 11, 1, 0) +
        IF(count_long_headlines >= 2, 1, 0)) / 3 AS text_score
     FROM `{bq_dataset}_bq.text_assets`
   ),
@@ -59,10 +59,10 @@ WITH
       count_landscape_logos,
       count_square,
       count_square_logos,
-      (IF(count_landscape >= 4, 1, 0) + 
-       IF(count_square >= 4, 1, 0) + 
-       IF(count_portrait >= 4, 1, 0) + 
-       IF(count_landscape_logos >= 1, 1, 0) + 
+      (IF(count_landscape >= 4, 1, 0) +
+       IF(count_square >= 4, 1, 0) +
+       IF(count_portrait >= 4, 1, 0) +
+       IF(count_landscape_logos >= 1, 1, 0) +
        IF(count_square_logos >= 1, 1, 0)) / 5 AS image_score
     FROM `{bq_dataset}_bq.image_assets`
   ),
@@ -82,6 +82,7 @@ SELECT
   AGS.account_name,
   AGS.campaign_id,
   AGS.campaign_name,
+  AGS.campaign_status,
   AGS.asset_group_id,
   AGS.asset_group_name,
   AGS.ad_strength,
@@ -89,11 +90,11 @@ SELECT
   V.video_score,
   T.text_score,
   I.image_score,
-  "Recommended" AS recommendation_type,
+  'Recommended' AS recommendation_type,
   IF(T.count_descriptions < 4, 4 - T.count_descriptions, 0) AS missing_descriptions,
   IF(T.count_headlines < 11, 11 - T.count_headlines, 0) AS missing_headlines,
   IF(T.count_long_headlines < 2, 2 - T.count_long_headlines, 0) AS missing_long_headlines,
-  IF((I.count_landscape + I.count_square + I.count_portrait + I.count_logos) < 12, 
+  IF((I.count_landscape + I.count_square + I.count_portrait + I.count_logos) < 12,
   12 - (I.count_landscape + I.count_square + I.count_portrait + I.count_logos), 0) AS missing_images,
   IF(I.count_landscape < 4, 4 - I.count_landscape, 0) AS missing_landscape,
   IF(I.count_square < 4, 4 - I.count_square, 0) AS missing_square,
@@ -102,7 +103,7 @@ SELECT
   IF(I.count_square_logos = 0, 1, 0) AS missing_square_logos,
   IF(I.count_landscape_logos = 0, 1, 0) AS missing_landscape_logos,
   IF(V.count_videos < 3, 3 - V.count_videos, 0) AS missing_video,
-  IF(ASA.number_of_audience_signals IS NOT NULL,"Yes","X") AS audience_signals,
+  IF(ASA.number_of_audience_signals IS NOT NULL, 'Yes', 'X') AS audience_signals,
   OCID.ocid
 FROM `{bq_dataset}.assetgroupsummary` AS AGS
   INNER JOIN VIDEO_DATA AS V
@@ -130,6 +131,7 @@ SELECT
   AGS.account_name,
   AGS.campaign_id,
   AGS.campaign_name,
+  AGS.campaign_status,
   AGS.asset_group_id,
   AGS.asset_group_name,
   AGS.ad_strength,
@@ -137,11 +139,11 @@ SELECT
   V.video_score,
   T.text_score,
   I.image_score,
-  "Maximum" AS recommendation_type,
+  'Maximum' AS recommendation_type,
   IF(T.count_descriptions < 5, 5 - T.count_descriptions, 0) AS missing_descriptions,
   IF(T.count_headlines < 15, 15 - T.count_headlines, 0) AS missing_headlines,
   IF(T.count_long_headlines < 5, 5 - T.count_long_headlines, 0) AS missing_long_headlines,
-  IF((I.count_landscape + I.count_square + I.count_portrait + I.count_logos) < 20, 
+  IF((I.count_landscape + I.count_square + I.count_portrait + I.count_logos) < 20,
   20 - (I.count_landscape + I.count_square + I.count_portrait + I.count_logos), 0) AS missing_images,
   IF(I.count_landscape < 4, 4 - I.count_landscape, 0) AS missing_landscape,
   IF(I.count_square < 4, 4 - I.count_square, 0) AS missing_square,

@@ -29,6 +29,7 @@ CREATE OR REPLACE TABLE `{bq_dataset}_bq.assetgroup_performance` AS (
       AGS.account_name,
       AGS.campaign_id,
       AGS.campaign_name,
+      AGS.campaign_status,
       AGS.asset_group_id,
       AGS.asset_group_name,
       AGS.asset_group_status,
