@@ -19,6 +19,7 @@ WITH
       account_id,
       campaign_id,
       campaign_type,
+      campaign_status,
       conversion_name
     FROM `{bq_dataset}.conversion_category`
   ),
@@ -27,14 +28,16 @@ WITH
       account_id,
       campaign_id,
       campaign_type,
-      ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
+      campaign_status,
+      STRING_AGG(conversion_name, ',') AS conversion_name
     FROM CONVERSION_ACCOUNT_LEVEL
-    GROUP BY 1,2,3
+    GROUP BY 1, 2, 3, 4
     UNION ALL
-    SELECT
+    SELECT DISTINCT
       account_id,
       campaign_id,
       campaign_type,
+      campaign_status,
       custom_conversion_goal_name AS conversion_name
     FROM `{bq_dataset}.conversion_custom`
     JOIN `{bq_dataset}.custom_goal_names` USING (account_id,custom_conversion_goal_id)
@@ -44,9 +47,10 @@ WITH
       account_id,
       campaign_id,
       campaign_type,
-      ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
+      campaign_status,
+      STRING_AGG(conversion_name, ',') AS conversion_name
     FROM CONVERSION_SPLIT
-    GROUP BY 1,2,3
+    GROUP BY 1, 2, 3, 4
   ),
   CONVERSION_ACTION_FREQUENCY AS (
     SELECT
@@ -57,7 +61,7 @@ WITH
       RANK() OVER (PARTITION BY account_id, campaign_type
         ORDER BY COUNT(DISTINCT campaign_id) DESC) AS row_num
     FROM CONVERSION_SPLIT_GROUPED_W_CUSTOM
-    WHERE campaign_type = "PERFORMANCE_MAX"
+    WHERE campaign_type = 'PERFORMANCE_MAX'
     GROUP BY
       account_id,
       conversion_name,
@@ -70,7 +74,7 @@ WITH
       campaign_id,
       campaign_type,
       row_num,
-      ARRAY_TO_STRING(ARRAY_AGG(conversion_name),",") AS conversion_name
+      STRING_AGG(conversion_name, ',') AS conversion_name
     FROM CONVERSION_ACTION_FREQUENCY
     GROUP BY
       account_id,
@@ -82,16 +86,18 @@ WITH
     SELECT
       CS.account_id,
       CS.campaign_id,
-      ARRAY_TO_STRING(ARRAY_AGG(CF.conversion_name),",") AS conversion_name
+      CS.campaign_status,
+      STRING_AGG(CF.conversion_name, ',') AS conversion_name
     FROM CONVERSION_SPLIT_GROUPED_W_CUSTOM AS CS
     JOIN CONVERSION_ACTION_FREQUENCY_GROUPED AS CF
       USING (account_id, campaign_id)
     WHERE row_num = 1
-      AND CS.campaign_type = "PERFORMANCE_MAX"
-    GROUP BY 1,2
+      AND CS.campaign_type = 'PERFORMANCE_MAX'
+    GROUP BY 1, 2, 3
   )
 SELECT DISTINCT
   account_id,
   campaign_id,
-  conversion_name
+  conversion_name,
+  campaign_status
 FROM MOST_USED_CONVERSIONS

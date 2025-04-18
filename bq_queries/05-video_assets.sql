@@ -35,6 +35,7 @@ AS (
     AGS.account_name,
     AGS.campaign_id,
     AGS.campaign_name,
+    AGS.campaign_status,
     AGS.asset_group_id,
     AGS.asset_group_name,
     AGS.ad_strength,

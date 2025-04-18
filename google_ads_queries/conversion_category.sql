@@ -14,9 +14,10 @@
 
 SELECT
     campaign.id AS campaign_id,
+    campaign.status AS campaign_status,
     customer.id AS account_id,
     campaign_conversion_goal.category AS conversion_name,
     campaign.advertising_channel_type AS campaign_type
 FROM campaign_conversion_goal
-WHERE campaign.advertising_channel_type IN ("PERFORMANCE_MAX", "SEARCH")
-AND campaign_conversion_goal.biddable = true
+WHERE campaign.advertising_channel_type IN ('PERFORMANCE_MAX', 'SEARCH')
+AND campaign_conversion_goal.biddable = TRUE

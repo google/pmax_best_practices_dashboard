@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SELECT 
-	customer.id as account_id,
-	campaign.id as campaign_id,
-	recommendation.type as rec_type
+SELECT
+	customer.id AS account_id,
+	campaign.id AS campaign_id,
+	recommendation.type AS rec_type
 FROM
 	recommendation
 WHERE
 	campaign.advertising_channel_type = 'PERFORMANCE_MAX'
-	AND recommendation.type in ('CAMPAIGN_BUDGET', 'FORECASTING_CAMPAIGN_BUDGET')
+	AND recommendation.type IN ('CAMPAIGN_BUDGET', 'FORECASTING_CAMPAIGN_BUDGET')
