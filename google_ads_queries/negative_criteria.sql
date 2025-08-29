@@ -14,10 +14,10 @@
 
 SELECT
     campaign.id AS campaign_id,
-    campaign.status AS campaign_status,
-    conversion_goal_campaign_config.custom_conversion_goal~0 AS custom_conversion_goal_id,
-    customer.id AS account_id,
-    campaign.advertising_channel_type AS campaign_type
-FROM conversion_goal_campaign_config
-WHERE campaign.advertising_channel_type IN ('PERFORMANCE_MAX', 'SEARCH')
-AND conversion_goal_campaign_config.custom_conversion_goal IS NOT NULL
+    campaign.resource_name AS campaign_resource_name,
+    campaign_criterion.negative,
+    campaign_criterion.type,
+FROM campaign_criterion
+WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
+    AND campaign.status IN ('ENABLED', 'PAUSED')
+    AND campaign_criterion.negative = TRUE

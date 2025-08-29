@@ -18,7 +18,7 @@ SELECT
     segments.conversion_action~0 AS conversion_action_id,
     segments.conversion_action_name AS conversion_name,
     metrics.conversions AS conversions,
-    customer.id as account_id,
+    customer.id AS account_id,
     campaign.advertising_channel_type AS campaign_type
 FROM ad_group_ad
 WHERE

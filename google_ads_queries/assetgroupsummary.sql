@@ -19,13 +19,14 @@ SELECT
   asset_group.status AS asset_group_status,
   campaign.id AS campaign_id,
   campaign.name AS campaign_name,
+  campaign.status AS campaign_status,
   customer.id AS account_id,
   customer.descriptive_name AS account_name,
   asset_group.ad_strength AS ad_strength,
   metrics.clicks AS clicks,
   metrics.conversions AS conversions,
   metrics.all_conversions AS all_conversions,
-  metrics.cost_micros As cost,
+  metrics.cost_micros AS cost,
   metrics.conversions_value AS conversions_value,
   metrics.impressions AS impressions,
   metrics.ctr AS ctr,
@@ -36,7 +37,7 @@ FROM
   asset_group
 WHERE
   campaign.advertising_channel_type = 'PERFORMANCE_MAX'
-  AND asset_group.status = 'ENABLED'
-  AND campaign.status = 'ENABLED'
+  AND asset_group.status IN ('ENABLED', 'PAUSED')
+  AND campaign.status IN ('ENABLED', 'PAUSED')
   AND segments.date >= '{start_date}'
   AND segments.date <= '{end_date}'

@@ -18,7 +18,7 @@ WITH
     SELECT
       account_id,
       campaign_id,
-      CASE 
+      CASE
         WHEN campaign_mcv_troas IS NOT NULL THEN campaign_mcv_troas
         WHEN campaign_troas IS NOT NULL THEN campaign_troas
         WHEN bidding_strategy_mcv_troas IS NOT NULL THEN bidding_strategy_mcv_troas
@@ -53,7 +53,7 @@ WITH
       COUNT(DISTINCT AGS.audience_signals) AS number_of_audience_signals,
       AGS.campaign_id AS campaign_id
     FROM `{bq_dataset}.assetgroupsignal` AS AGS
-    GROUP BY 
+    GROUP BY
       campaign_id
   ),
   CAMPIAGN_SITELINKS_DATA AS (
@@ -131,6 +131,10 @@ SELECT
   C.conversions_value,
   PCA.conversion_name AS pmax_conversion,
   PCAS.conversion_name AS primary_conversion_search,
+  REGEXP_CONTAINS(ARRAY_TO_STRING(C.asset_automation_settings, ','), r'"asset_automation_type"\s*\:\s*"TEXT_ASSET_AUTOMATION"\s*,\s*"asset_automation_status"\s*\:\s*"OPTED_IN"') AS has_automatic_text_asset_automation,
+  COUNT(IF(NC.type = 'KEYWORD' AND NC.negative, 1, null)) > 0 AS has_keyword_exclusions,
+  COUNT(IF(NC.type = 'USER_LIST' AND NC.negative, 1, null)) > 0 AS has_users_exclusions,
+  CLG.customer_acquisition_goal_settings_optimization_mode AS customer_acquisition_optimization_mode,
   C.negative_geo_target_type as negative_geo_target_type,
   C.positive_geo_target_type as positive_geo_target_type,
   IF (ASCC.number_of_audience_signals IS NOT NULL, ASCC.number_of_audience_signals, 0) AS number_of_audience_signals,
@@ -138,20 +142,20 @@ SELECT
   IF (C.negative_geo_target_type != 'PRESENCE_OR_INTEREST', "X", "Yes") as negative_geo_target_type_configured_good,
   IF (C.positive_geo_target_type != 'PRESENCE_OR_INTEREST', "X", "Yes") as positive_geo_target_type_configured_good,
   CASE
-    WHEN (IF(SD.campaign_sitelinks IS NULL, 0, SD.campaign_sitelinks) 
+    WHEN (IF(SD.campaign_sitelinks IS NULL, 0, SD.campaign_sitelinks)
     + IF(ASD.account_sitelinks IS NULL, 0, ASD.account_sitelinks)) >= 4
       THEN 0
-    ELSE 4 - (IF(SD.campaign_sitelinks IS NULL, 0, SD.campaign_sitelinks) 
+    ELSE 4 - (IF(SD.campaign_sitelinks IS NULL, 0, SD.campaign_sitelinks)
     + IF(ASD.account_sitelinks IS NULL, 0, ASD.account_sitelinks))
   END AS missing_sitelinks,
   CASE
-     WHEN (IF(CD.campaign_callouts IS NULL, 0, CD.campaign_callouts) 
+     WHEN (IF(CD.campaign_callouts IS NULL, 0, CD.campaign_callouts)
      + IF(ACD.account_callouts IS NULL, 0, ACD.account_callouts)) >= 1
       THEN 0
     ELSE 1
   END AS missing_callouts,
   CASE
-     WHEN (IF(SSD.campaign_structsnippets IS NULL, 0, SSD.campaign_structsnippets) 
+     WHEN (IF(SSD.campaign_structsnippets IS NULL, 0, SSD.campaign_structsnippets)
      + IF(ASSD.account_structsnippets IS NULL, 0, ASSD.account_structsnippets)) >= 1
       THEN 0
     ELSE 1
@@ -185,7 +189,11 @@ FROM `{bq_dataset}.campaign_settings` C
   LEFT JOIN `{bq_dataset}_bq.primary_conversion_action_pmax` AS PCA
     ON PCA.account_id = C.account_id
     AND PCA.campaign_id = C.campaign_id
-  LEFT JOIN ASSET_GROUPS_COUNT AS AGC
+    LEFT JOIN `{bq_dataset}.campaign_lifecycle_goals` AS CLG
+    ON CLG.campaign = C.campaign_resource_name
+  LEFT JOIN `{bq_dataset}.negative_criteria` AS NC
+    ON NC.campaign_resource_name = C.campaign_resource_name
+LEFT JOIN ASSET_GROUPS_COUNT AS AGC
     ON C.campaign_id = AGC.campaign_id
   LEFT JOIN AUDIENCE_SIGNALS_COUNT AS ASCC
     ON C.campaign_id = ASCC.campaign_id
@@ -202,4 +210,5 @@ FROM `{bq_dataset}.campaign_settings` C
   LEFT JOIN ACCOUNT_STRUCTURED_SNIPPETS_DATA AS ASSD
     ON C.account_id = ASSD.account_id
   LEFT JOIN `{bq_dataset}.ocid_mapping` AS OCID
-    ON OCID.customer_id = C.account_id;
+    ON OCID.customer_id = C.account_id
+GROUP BY ALL;

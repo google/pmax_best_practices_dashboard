@@ -13,7 +13,7 @@
 # limitations under the License.
 
 CREATE OR REPLACE TABLE `{bq_dataset}_bq.campaign_scores_union` AS
-WITH 
+WITH
 score_types AS
 (
   SELECT 'Video Score' AS score_type UNION ALL
@@ -22,11 +22,12 @@ score_types AS
   SELECT 'Campaign Best Practice Score'
 ),
 
-scores_union AS 
+scores_union AS
 (
-  SELECT 
+  SELECT
     `date`,
     campaign_name,
+    campaign_status,
     video_score,
     image_score,
     text_score,
@@ -36,15 +37,16 @@ scores_union AS
   CROSS JOIN score_types S
 )
 
-SELECT 
+SELECT
   `date`,
   campaign_name,
+  campaign_status,
   score_type,
   CASE score_type
-    WHEN "Video Score" THEN video_score
-    WHEN "Image Score" THEN image_score
-    WHEN "Text Score" THEN text_score
-    WHEN "Campaign Best Practice Score" THEN campaign_bp_score
+    WHEN 'Video Score' THEN video_score
+    WHEN 'Image Score' THEN image_score
+    WHEN 'Text Score' THEN text_score
+    WHEN 'Campaign Best Practice Score' THEN campaign_bp_score
     ELSE NULL
   END AS score
 FROM scores_union

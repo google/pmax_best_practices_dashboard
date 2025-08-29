@@ -60,11 +60,12 @@ count_short_descriptions AS (
     AND LENGTH(AGA.text_asset_text) <= 60
   GROUP BY 1, 2
 )
-SELECT DISTINCT
+SELECT
   AGS.account_id,
   AGS.account_name,
   AGS.campaign_id,
   AGS.campaign_name,
+  AGS.campaign_status,
   AGS.asset_group_id,
   AGS.asset_group_name,
   COALESCE(CH.count_headlines,0) AS count_headlines,
@@ -88,4 +89,4 @@ LEFT JOIN count_short_descriptions AS CSD
 LEFT JOIN count_long_headlines AS CLH
   ON CLH.campaign_id = AGS.campaign_id
   AND CLH.asset_group_id = AGS.asset_group_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12

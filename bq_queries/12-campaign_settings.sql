@@ -42,7 +42,7 @@ WITH
       ROUND(AVG(text_score), 2) AS text_score,
       ROUND(AVG(image_score), 2) AS image_score
     FROM `{bq_dataset}_bq.assetgroupbpscore_*`
-    GROUP BY 1,2,3
+    GROUP BY 1, 2, 3
   ),
   CAMPAIGN_BEST_PRACTICES AS (
     SELECT
@@ -51,7 +51,7 @@ WITH
       campaign_id,
       campaign_bp_score
     FROM `{bq_dataset}_bq.campaignbpscore_*`
-    GROUP BY 1,2,3,4
+    GROUP BY 1, 2, 3, 4
   )
 SELECT
     C.date,
@@ -59,6 +59,7 @@ SELECT
     C.account_name,
     C.campaign_id,
     C.campaign_name,
+    C.campaign_status,
     C.bidding_strategy,
     C.budget_amount,
     C.total_budget,

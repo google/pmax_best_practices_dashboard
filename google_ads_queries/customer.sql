@@ -13,7 +13,7 @@
 # limitations under the License.
 
 SELECT
-	customer.id as account_id,
-	customer.descriptive_name as account_name,
-	customer.currency_code as currency
+	customer.id AS account_id,
+	customer.descriptive_name AS account_name,
+	customer.currency_code AS currency
 FROM customer
