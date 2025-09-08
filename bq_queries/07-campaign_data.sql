@@ -50,7 +50,7 @@ WITH
   ),
   AUDIENCE_SIGNALS_COUNT AS (
     SELECT
-      COUNT(DISTINCT AGS.asset_group_id) AS number_of_audience_signals,
+      COUNT(DISTINCT AGS.audience_signals) AS number_of_audience_signals,
       AGS.campaign_id AS campaign_id
     FROM `{bq_dataset}.assetgroupsignal` AS AGS
     GROUP BY
