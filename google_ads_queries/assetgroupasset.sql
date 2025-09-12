@@ -32,9 +32,18 @@ SELECT
   asset.image_asset.full_size.height_pixels AS image_height,
   asset.image_asset.full_size.width_pixels AS image_width,
   asset.youtube_video_asset.youtube_video_id AS video_id,
-  asset.youtube_video_asset.youtube_video_title AS video_title
+  asset.youtube_video_asset.youtube_video_title AS video_title,
+  segments.date AS date,
+  metrics.impressions AS impressions,
+  metrics.clicks AS clicks,
+  metrics.conversions AS conversions,
+  metrics.conversions_value AS conversions_value,
+  metrics.cost_micros AS cost_micros
 FROM asset_group_asset
 WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
-AND asset_group.status IN ('ENABLED', 'PAUSED')
-AND asset_group_asset.status IN ('ENABLED', 'PAUSED')
-AND asset_group_asset.source = 'ADVERTISER'
+  AND campaign.status IN ('ENABLED', 'PAUSED')
+  AND asset_group.status IN ('ENABLED', 'PAUSED')
+  AND asset_group_asset.status IN ('ENABLED', 'PAUSED')
+  AND asset_group_asset.source = 'ADVERTISER'
+  AND segments.date >= '{start_date}'
+  AND segments.date <= '{end_date}'
