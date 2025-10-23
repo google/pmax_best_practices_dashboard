@@ -241,14 +241,6 @@ sh non_retail_to_retail_upgrade.sh
 
 Follow the link at the end of the deployment process to access your new retail pMaximizer.
 
-### After finishing an upgrade, some tables are missing, and when looking at the table properties I see an "Invalid dimension" error for two or three of the top columns (see screenshot):
-
-![column link error](https://services.google.com/fh/files/misc/ocid_bug.png)
-
-This could be caused by newly introduced columns that allow deep linking into the respective accounts, campaigns, or asset groups. If you do not want deep linking, you can simply replace the broken (red) columns of your tables with account_name, campaign_name, and asset_group_name respectively.
-
-## If you do want the deep linking feature, see full instructions on how to fix the issue in [this document](https://docs.google.com/document/d/1bXSV6Et0xMD6XfS3y10qpdsbivrM_Y5-o71LMK8sbTI/edit?resourcekey=0-9MSOa9d1tYpWMnh2Zmr4Tg&tab=t.0) (you need to be part of the [Google group](https://groups.google.com/g/pmax-dashboard-template-readers/) to access the document).
-
 **If you can’t find an answer for your question/a solution to your problem here, please reach out to pmax_bpdash@google.com.**
 
 ## Disclaimer
