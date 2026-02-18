@@ -46,9 +46,9 @@ fi
 FOLDER_PATH="gs://${BUCKET_NAME}/${name}/${path_to_bq_queries}"
 
 # Check if the folder exists
-if gsutil ls "$FOLDER_PATH" >/dev/null 2>&1; then
+if gcloud storage ls "$FOLDER_PATH" >/dev/null 2>&1; then
     # Deleting the folder in the GCS bucket
-    gsutil -m rm -r "${FOLDER_PATH}"
+    gcloud storage rm --recursive "${FOLDER_PATH}"
     echo "Folder ${path_to_bq_queries} in bucket ${BUCKET_NAME} under ${name} has been deleted."
 else
     echo "Folder ${path_to_bq_queries} does not exist in bucket ${BUCKET_NAME} under ${name}."
