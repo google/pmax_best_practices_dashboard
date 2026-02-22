@@ -13,13 +13,13 @@
 # limitations under the License.
 
 SELECT
-  customer.descriptive_name as account_name,
-  campaign.id as campaign_id,
-  customer.id as account_id,
-  campaign.name as campaign_name,
-  campaign.advertising_channel_type as campaign_type,
-  campaign.status as campaign_status,
-  campaign_asset.field_type as asset_type
-FROM campaign_asset 
+  customer.descriptive_name AS account_name,
+  campaign.id AS campaign_id,
+  customer.id AS account_id,
+  campaign.name AS campaign_name,
+  campaign.advertising_channel_type AS campaign_type,
+  campaign.status AS campaign_status,
+  campaign_asset.field_type AS asset_type
+FROM campaign_asset
 WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
-AND campaign.status = 'ENABLED'
+AND campaign.status IN ('ENABLED', 'PAUSED')

@@ -13,11 +13,8 @@
 # limitations under the License.
 
 SELECT
-    campaign.id AS campaign_id,
-    campaign.status AS campaign_status,
-    conversion_goal_campaign_config.custom_conversion_goal~0 AS custom_conversion_goal_id,
-    customer.id AS account_id,
-    campaign.advertising_channel_type AS campaign_type
-FROM conversion_goal_campaign_config
-WHERE campaign.advertising_channel_type IN ('PERFORMANCE_MAX', 'SEARCH')
-AND conversion_goal_campaign_config.custom_conversion_goal IS NOT NULL
+  campaign_lifecycle_goal.campaign,
+  campaign_lifecycle_goal.customer_acquisition_goal_settings.optimization_mode,
+  campaign_lifecycle_goal.customer_acquisition_goal_settings.value_settings.value,
+  campaign_lifecycle_goal.customer_acquisition_goal_settings.value_settings.high_lifetime_value
+FROM campaign_lifecycle_goal

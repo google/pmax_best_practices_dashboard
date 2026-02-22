@@ -16,6 +16,18 @@ SELECT
   asset.id AS asset_id,
   ad_group_asset.ad_group~0 AS ad_group_id,
   customer.id AS account_id,
-  ad_group_asset.field_type AS asset_type
+  campaign.advertising_channel_type,
+  campaign.status AS campaign_status,
+  ad_group_asset.field_type AS asset_type,
+  segments.date AS date,
+  metrics.impressions AS impressions,
+  metrics.clicks AS clicks,
+  metrics.conversions AS conversions,
+  metrics.conversions_value AS conversions_value,
+  metrics.cost_micros AS cost_micros
 FROM
   ad_group_asset
+WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX'
+  AND campaign.status IN ('ENABLED', 'PAUSED')
+  AND segments.date >= '{start_date}'
+  AND segments.date <= '{end_date}'
